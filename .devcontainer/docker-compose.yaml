@@ -1,0 +1,18 @@
+version: "2.4"
+services:
+  dev:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    working_dir: /workspace
+    command: /bin/sh -c "while sleep 1; do :; done"
+    volumes:
+      - /dev/net:/dev/net:z
+      - ..:/workspace
+      - $HOME/.ssh:/root/.ssh
+      - ../.dev/volumes/kube:/root/.kube
+      - commandhistory:/commandhistory
+    cap_add:
+      - net_admin
+volumes:
+  commandhistory:

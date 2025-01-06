@@ -1,0 +1,26 @@
+{
+    "name": "Homelab Kube",
+    "dockerComposeFile": [
+        "docker-compose.yaml"
+    ],
+    "service": "dev",
+    "workspaceFolder": "/workspace",
+    "remoteUser": "root",
+    "shutdownAction": "stopCompose",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "eamodio.gitlens",
+                "redhat.vscode-yaml",
+                "github.vscode-pull-request-github",
+                "github.copilot",
+                "ms-kubernetes-tools.vscode-kubernetes-tools",
+                "weaveworks.vscode-gitops-tools"
+            ],
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash"
+            }
+        }
+    },
+    "postCreateCommand": "git config --global --add safe.directory /workspace"
+}
