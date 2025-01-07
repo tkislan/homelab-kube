@@ -19,17 +19,3 @@ spec:
   releaseName: cert-manager
   values:
     installCRDs: true
-    nodeSelector:
-      node.kubernetes.io/type: cloud
-
-    webhook:
-      nodeSelector:
-        node.kubernetes.io/type: cloud
-
-    cainjector:
-      nodeSelector:
-        node.kubernetes.io/type: cloud
-
-    startupapicheck:
-      nodeSelector:
-        node.kubernetes.io/type: cloud
