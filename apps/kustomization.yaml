@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - cluster-issuer.yaml
+  - metropolitan-real
+  # - kodi-connect
+  # - homehub
+  # # - homenvr
+  # - pirate
+  # - garden
+  # - freshrss
+  # - measurement
+  # - tunnel

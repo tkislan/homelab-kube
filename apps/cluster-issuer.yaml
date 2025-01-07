@@ -1,0 +1,58 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: digitalocean-dns
+  namespace: cert-manager
+spec:
+  encryptedData:
+    access-token: AgAqZkVjbFVz3QgsiSuoF9vTwJoGNe1+ya+XpTuETakkZygHj3LnQnlwCF+iW4HQPpV6fjqPwNTDX7ZhKMIMcDhtxFJWUPfF5UwEa5sbNBhaBVn+iNmevVl4I0Jg/atAyevpvfauXR+Kg8fOAGyPRLM1JmfngtjgLpR8rmaM1ym4687hZR4u0he4+qXyR3cvdylkMf02VTv4MdFaP++MgVsDfOAHQnY1FyOfGv5725T7NrN2ZEBue2c8BZve7Gi/+tzDrbNHvxUgOdLj+uye4Lc93uxds4oicDnb5V3tgb0WTcCjF0sP7RWveNb61FISb50QhhZWMeLYsPYjD5ZTh91CJiKGQdYbSBU685dSzGg60TJRowAGnosUxiJuTuglBX4/4sDBll/8fr2SI/EazAbGrBmsEdLu00huFJ1/SPdD27cDOBSvz8acjQFglmZr/E1iQ7r6mYCAoSPiMBpTk87feGP82dstcsHsyROPFOaon6tV2FG9j1vHVOrHPiT93cHJxBelZ2eV7JLWpKW8NR2+JmH1cDO0F/zoloLZc5qb6979i9gr1b82Bwy7WkcFBo+zAvEQa1yOMn0n8EFIsshxz8a8NHr2VGRBW/xSYomRzgUtOC9sOzUnvdS+KEoiCioxm8QNxxX7NU0IYSH0Az8SPU3zSZF7M9/4J/5fW80IzSYcIabV2C2gvDhIcBg0wWZ3Rq/TT9x8InqZhlRB3fUR3/vxEVHl5LR4r14zCXObwPS+KCWyhstbu23U+GblpUY/kTmK9oQbN9g3m0BGusoLTV00yLysNA==
+  template:
+    metadata:
+      creationTimestamp: null
+      name: digitalocean-dns
+      namespace: cert-manager
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt
+  namespace: cert-manager
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: kislan.tomas@gmail.com
+
+    privateKeySecretRef:
+      name: letsencrypt
+
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+      - dns01:
+          digitalocean:
+            tokenSecretRef:
+              name: digitalocean-dns
+              key: access-token
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-dns
+  namespace: cert-manager
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: kislan.tomas@gmail.com
+
+    privateKeySecretRef:
+      name: letsencrypt
+
+    solvers:
+      - dns01:
+          digitalocean:
+            tokenSecretRef:
+              name: digitalocean-dns
+              key: access-token

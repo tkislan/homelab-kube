@@ -11,6 +11,7 @@ services:
       - ..:/workspace
       - $HOME/.ssh:/root/.ssh
       - ../.dev/volumes/kube:/root/.kube
+      - ../.dev/volumes/tailscale:/var/lib/tailscale
       - commandhistory:/commandhistory
     cap_add:
       - net_admin
