@@ -8,7 +8,6 @@ resources:
   - serviceaccount.yaml
 
   - secrets.yaml
-  - storage.yaml
 
   - postgres.yaml
 # - app.yaml
