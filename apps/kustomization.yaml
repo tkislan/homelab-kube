@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - cluster-issuer.yaml
   - metropolitan-real
-  # - kodi-connect
+  - kodi-connect
   # - homehub
   # # - homenvr
   # - pirate

@@ -1,0 +1,61 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  namespace: kodi-connect
+spec:
+  ports:
+    - port: 27017
+      targetPort: 27017
+      protocol: TCP
+  selector:
+    app: mongo
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+  namespace: kodi-connect
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  serviceName: "mongo"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      volumes:
+        - name: mongo-pv-storage
+          persistentVolumeClaim:
+            claimName: mongo-pv-claim
+      containers:
+        - name: mongo
+          image: mongo:3.6.2
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: mongo-pv-storage
+              mountPath: /data/db
+          resources:
+            requests:
+              cpu: "0"
+              memory: "0"
+            limits:
+              cpu: 200m
+              memory: 300Mi
+      terminationGracePeriodSeconds: 10
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: storage
+                    operator: In
+                    values:
+                      - db
