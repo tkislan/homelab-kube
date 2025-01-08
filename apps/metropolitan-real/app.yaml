@@ -26,6 +26,8 @@ metadata:
     traefik.ingress.kubernetes.io/buffering: |
       maxrequestbodybytes: 31457280
       memrequestbodybytes: 62914560
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
   tls:
     - hosts:
