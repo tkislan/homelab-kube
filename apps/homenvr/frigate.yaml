@@ -1,0 +1,167 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frigate
+  namespace: homepi
+spec:
+  ports:
+    - name: http-auth
+      port: 8971
+      targetPort: http-auth
+      protocol: TCP
+    - name: http
+      port: 5000
+      targetPort: http
+      protocol: TCP
+    - name: rtmp
+      port: 1935
+      protocol: TCP
+      targetPort: rtmp
+    - name: rtsp
+      port: 8554
+      protocol: TCP
+      targetPort: rtsp
+  selector:
+    app: frigate
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frigate
+  namespace: homepi
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt"
+
+spec:
+  tls:
+    - hosts:
+        - frigate.kislan.sk
+      secretName: frigate-kislan-sk
+  rules:
+    - host: frigate.kislan.sk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frigate
+                port:
+                  name: http-auth
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: frigate
+  namespace: homepi
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  serviceName: frigate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frigate
+  template:
+    metadata:
+      labels:
+        app: frigate
+    spec:
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Gi
+        - name: tmpcache
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Gi
+        - name: intel-gpu
+          hostPath:
+            path: /dev/dri/renderD128
+            type: CharDevice
+        - name: config
+          hostPath:
+            path: /var/local/kube-volumes/frigate-config
+            type: DirectoryOrCreate
+        - name: storage
+          hostPath:
+            path: /data/frigate-storage
+            type: DirectoryOrCreate
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
+      containers:
+        - name: frigate
+          image: ghcr.io/blakeblackshear/frigate:0.15.0-beta4
+          securityContext:
+            capabilities:
+              add: ["CAP_PERFMON"]
+          # securityContext:
+          #   privileged: true
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+            - name: http-auth
+              containerPort: 8971
+              protocol: TCP
+            - name: rtmp
+              containerPort: 1935
+              protocol: TCP
+            - name: rtsp
+              containerPort: 8554
+              protocol: TCP
+            - name: rtsp
+              containerPort: 8554
+              protocol: TCP
+          env: []
+          volumeMounts:
+            - name: localtime
+              mountPath: /etc/localtime
+              readOnly: true
+            - name: dshm
+              mountPath: /dev/shm
+            - name: tmpcache
+              mountPath: /tmp/cache
+            - name: config
+              mountPath: /config
+            - name: storage
+              mountPath: /media/frigate
+            - name: intel-gpu
+              mountPath: /dev/dri/renderD128
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 30
+            failureThreshold: 5
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 30
+            failureThreshold: 5
+            timeoutSeconds: 10
+      terminationGracePeriodSeconds: 10
+      tolerations:
+        - key: edge
+          operator: Equal
+          value: homenvr
+          effect: NoExecute
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: edge
+                    operator: In
+                    values:
+                      - homenvr

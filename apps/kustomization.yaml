@@ -6,7 +6,7 @@ resources:
   - metropolitan-real
   - kodi-connect
   # - homehub
-  # # - homenvr
+  - homenvr
   # - pirate
   - garden
   # - freshrss
