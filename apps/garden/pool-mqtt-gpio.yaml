@@ -1,0 +1,103 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pool-mqtt-gpio
+  namespace: garden
+spec:
+  selector:
+    matchLabels:
+      app: pool-mqtt-gpio
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: pool-mqtt-gpio
+    spec:
+      # TODO - remove host network once homenuc is migrated
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      securityContext:
+        fsGroup: 997
+      volumes:
+        - name: config-template
+          configMap:
+            name: pool-mqtt-gpio-cfg
+        - name: config
+          emptyDir: {}
+        - name: bus
+          hostPath:
+            path: /sys/bus
+            type: Directory
+        - name: devmem
+          hostPath:
+            path: /dev/mem
+            type: CharDevice
+      initContainers:
+        - name: config
+          image: alpine:3
+          command:
+            - "/bin/sh"
+          args:
+            - "-ec"
+            - >
+              apk add gettext;
+              envsubst < /templates/config.yaml > /config/config.yml;
+          env:
+            - name: MQTT_HOSTNAME
+              # TODO - remove once homenuc is migrated
+              # value: mosquitto.homepi
+              value: homenuc
+            - name: MQTT_PORT
+              value: "1883"
+            - name: MQTT_USERNAME
+              value: poolpi
+            - name: MQTT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mosquitto-passwords
+                  key: mqtt_password
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: config-template
+              mountPath: /templates
+      containers:
+        - name: pool-mqtt-gpio
+          image: flyte/mqtt-io:2.2.7
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+            runAsUser: 0
+            runAsGroup: 0
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
+            limits:
+              cpu: 750m
+              memory: 150Mi
+          volumeMounts:
+            - name: config
+              subPath: config.yml
+              mountPath: /config.yml
+            - name: bus
+              mountPath: /sys/bus
+            - name: devmem
+              mountPath: /dev/mem
+      tolerations:
+        - key: edge
+          operator: Equal
+          value: poolpi
+          effect: NoSchedule
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: edge
+                    operator: In
+                    values:
+                      - poolpi

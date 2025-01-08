@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: garden
+
+resources:
+- namespace.yaml
+- serviceaccount.yaml
+
+- secrets.yaml
+
+- pool-mqtt-gpio-config.yaml
+
+- pool-mqtt-gpio.yaml
