@@ -31,7 +31,10 @@ metadata:
   name: frigate
   namespace: homepi
   annotations:
-    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/frontend-entry-points: http
     cert-manager.io/cluster-issuer: "letsencrypt"
 
 spec:
