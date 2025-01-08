@@ -5,10 +5,10 @@ resources:
   - cluster-issuer.yaml
   - metropolitan-real
   - kodi-connect
-  # - homehub
+  - homehub
   - homenvr
   # - pirate
   - garden
   # - freshrss
   # - measurement
-  # - tunnel
+  - tunnel

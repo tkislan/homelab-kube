@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: homepi
+
+resources:
+  - namespace.yaml
+  - serviceaccount.yaml
+
+  - secrets.yaml
+  - mosquitto-config.yaml
+
+  # - mosquitto.yaml
+  # - unifi-mongo.yaml
+  # - unifi.yaml
+  # - postgres12.yaml
+  # - paradox.yaml
+  # - zwavejs.yaml
+  # - zigbeemqtt.yaml
+
+  # - hass.yaml

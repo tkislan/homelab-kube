@@ -1,0 +1,118 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: marek-rpi-hass-ingress
+  namespace: tunnel
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: marek-rpi-hass
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: marek-rpi-hass
+  namespace: tunnel
+spec:
+  type: NodePort
+  ports:
+    - port: 2222
+      targetPort: 2222
+      protocol: TCP
+      nodePort: 32201
+  selector:
+    app: marek-rpi-hass
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: marek-rpi-hass
+#   namespace: tunnel
+#   annotations:
+#     kubernetes.io/ingress.class: traefik
+#     traefik.ingress.kubernetes.io/frontend-entry-points: http
+#     traefik.ingress.kubernetes.io/router.entrypoints: websecure
+#     traefik.ingress.kubernetes.io/router.tls: "true"
+#     cert-manager.io/cluster-issuer: "letsencrypt"
+
+# spec:
+#   tls:
+#     - hosts:
+#         - marek-hass.kislan.sk
+#       secretName: marek-hass-kislan-sk
+#   rules:
+#     - host: marek-hass.kislan.sk
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: marek-rpi-hass-ingress
+#                 port:
+#                   number: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: marek-rpi-hass
+  namespace: tunnel
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: marek-rpi-hass
+  template:
+    metadata:
+      labels:
+        app: marek-rpi-hass
+    spec:
+      volumes:
+        - name: ssh-tunnel-config
+          configMap:
+            name: ssh-tunnel-cfg
+            defaultMode: 0777
+        - name: config
+          hostPath:
+            path: /var/local/kube-volumes/tunnel-marek-hass
+            type: DirectoryOrCreate
+      containers:
+        - name: tunnel
+          image: linuxserver/openssh-server:8.1_p1-r0-ls13
+          ports:
+            - containerPort: 2222
+            - containerPort: 8080
+          env:
+            - name: USER_NAME
+              value: tunnel
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: marek-rpi-hass
+                  key: public_key
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: ssh-tunnel-config
+              mountPath: /etc/cont-init.d/51-enable-forward
+              subPath: script
+          resources:
+            requests:
+              cpu: "0"
+              memory: "0"
+            limits:
+              cpu: 50m
+              memory: 25Mi
+      terminationGracePeriodSeconds: 10
