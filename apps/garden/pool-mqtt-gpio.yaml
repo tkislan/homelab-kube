@@ -91,7 +91,7 @@ spec:
         - key: edge
           operator: Equal
           value: poolpi
-          effect: NoSchedule
+          effect: NoExecute
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
