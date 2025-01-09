@@ -22,10 +22,10 @@ jobs:
         run: flux install
 
       - name: Kustomize Build Secrets
-        run: kubectl kustomize secrets/ | kubectl apply --dry-run=server -f -
+        run: kubectl kustomize secrets/ | kubectl apply -f -
 
       - name: Kustomize Build Infra
-        run: kubectl kustomize infra/ | kubectl apply --dry-run=server -f -
+        run: kubectl kustomize infra/ | kubectl apply -f -
 
       - name: Kustomize Build Apps
-        run: kubectl kustomize apps/ | kubectl apply --dry-run=server -f -
+        run: kubectl kustomize apps/ | kubectl apply -f -
