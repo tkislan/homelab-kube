@@ -21,7 +21,7 @@ metadata:
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
     traefik.ingress.kubernetes.io/router.tls: "true"
-    traefik.ingress.kubernetes.io/router.middlewares: "default-https-redirect@kubernetescrd"
+    # traefik.ingress.kubernetes.io/router.middlewares: "default-https-redirect@kubernetescrd"
     traefik.ingress.kubernetes.io/service.serversscheme: "https"
     traefik.ingress.kubernetes.io/service.serverstransport: "insecure-skip-verify@kubernetescrd"
     cert-manager.io/cluster-issuer: "letsencrypt"
