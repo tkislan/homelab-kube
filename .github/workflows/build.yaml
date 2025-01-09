@@ -1,5 +1,7 @@
 name: Kustomize Build
 
+on: [push]
+
 jobs:
   lint:
     runs-on: ubuntu-latest
