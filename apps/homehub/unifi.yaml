@@ -4,6 +4,9 @@ kind: Service
 metadata:
   name: unifi
   namespace: homepi
+  annotations:
+    traefik.ingress.kubernetes.io/service.serversscheme: "https"
+    traefik.ingress.kubernetes.io/service.serverstransport: "default-insecure-skip-verify@kubernetescrd"
 spec:
   ports:
     - port: 8443
@@ -22,8 +25,6 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
     traefik.ingress.kubernetes.io/router.tls: "true"
     # traefik.ingress.kubernetes.io/router.middlewares: "default-https-redirect@kubernetescrd"
-    traefik.ingress.kubernetes.io/service.serversscheme: "https"
-    traefik.ingress.kubernetes.io/service.serverstransport: "insecure-skip-verify@kubernetescrd"
     cert-manager.io/cluster-issuer: "letsencrypt"
 
 spec:
