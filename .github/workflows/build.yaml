@@ -1,0 +1,22 @@
+name: Kustomize Build
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1
+
+      - uses: actions/checkout@v4
+
+      - name: Install Kubectl
+        run: ./scripts/install_kubectl.sh
+
+      - name: Kustomize Build Secrets
+        run: kubectl kustomize secrets/ | kubectl apply --dry-run=server -f -
+
+      - name: Kustomize Build Infra
+        run: kubectl kustomize infra/ | kubectl apply --dry-run=server -f -
+
+      - name: Kustomize Build Apps
+        run: kubectl kustomize apps/ | kubectl apply --dry-run=server -f -
