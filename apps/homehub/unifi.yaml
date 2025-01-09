@@ -6,8 +6,8 @@ metadata:
   namespace: homepi
 spec:
   ports:
-    - port: 8080
-      targetPort: 8080
+    - port: 8443
+      targetPort: 8443
       protocol: TCP
   selector:
     app: unifi
@@ -21,8 +21,9 @@ metadata:
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
     traefik.ingress.kubernetes.io/router.tls: "true"
-    traefik.ingress.kubernetes.io/frontend-entry-points: http
-    # traefik.ingress.kubernetes.io/router.middlewares: "default-https-redirect@kubernetescrd"
+    traefik.ingress.kubernetes.io/router.middlewares: "default-https-redirect@kubernetescrd"
+    traefik.ingress.kubernetes.io/service.serversscheme: "https"
+    traefik.ingress.kubernetes.io/service.serverstransport: "insecure-skip-verify@kubernetescrd"
     cert-manager.io/cluster-issuer: "letsencrypt"
 
 spec:
@@ -40,7 +41,7 @@ spec:
               service:
                 name: unifi
                 port:
-                  number: 8080
+                  number: 8443
 ---
 apiVersion: apps/v1
 kind: StatefulSet
