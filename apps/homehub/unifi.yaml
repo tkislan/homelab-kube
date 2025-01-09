@@ -15,7 +15,7 @@ metadata:
   namespace: homepi
   annotations:
     traefik.ingress.kubernetes.io/service.serversscheme: https # Set backend is HTTPS
-    traefik.ingress.kubernetes.io/service.serverstransport: unifi@kubernetescrd
+    traefik.ingress.kubernetes.io/service.serverstransport: homepi.unifi@kubernetescrd
 spec:
   ports:
     - port: 8443
