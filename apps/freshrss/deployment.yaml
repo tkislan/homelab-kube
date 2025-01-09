@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: freshrss
+  namespace: freshrss
+spec:
+  selector:
+    matchLabels:
+      app: freshrss
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: freshrss
+    spec:
+      containers:
+        - name: freshrss
+          image: freshrss/freshrss:1.23.1
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: data
+              mountPath: /var/www/FreshRSS/data
+            - name: extensions
+              mountPath: /var/www/FreshRSS/extensions
+          env:
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
+            - name: CRON_MIN
+              value: "13,43"
+            - name: TZ
+              value: Europe/Bratislava
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
+            limits:
+              cpu: 500m
+              memory: 200Mi
+      volumes:
+        - name: data
+          hostPath:
+            path: /var/local/kube-volumes/freshrss-data
+            type: DirectoryOrCreate
+        - name: extensions
+          hostPath:
+            path: /var/local/kube-volumes/freshrss-extensions
+            type: DirectoryOrCreate
+      tolerations:
+        - key: edge
+          operator: Equal
+          value: homenuc
+          effect: NoExecute
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: edge
+                    operator: In
+                    values:
+                      - homenuc

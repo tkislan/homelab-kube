@@ -1,0 +1,115 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: measurement
+spec:
+  ports:
+    - port: 9090
+      targetPort: 9090
+      protocol: TCP
+  selector:
+    app: prometheus
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prometheus
+  namespace: measurement
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/frontend-entry-points: http
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    ingress.kubernetes.io/auth-type: basic
+    ingress.kubernetes.io/auth-secret: hass-prometheus-basic-auth
+    cert-manager.io/cluster-issuer: "letsencrypt"
+spec:
+  tls:
+    - hosts:
+        - prometheus-home.kislan.sk
+      secretName: prometheus-home-kislan-sk
+  rules:
+    - host: prometheus-home.kislan.sk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus
+                port:
+                  number: 9090
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: prometheus
+  namespace: measurement
+spec:
+  serviceName: prometheus
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsNonRoot: false
+        runAsGroup: 0
+        fsGroup: 0
+      volumes:
+        - name: hass-prometheus-token
+          secret:
+            secretName: hass-prometheus-token
+        - name: prometheus-config
+          configMap:
+            name: prometheus-config
+        - name: data
+          hostPath:
+            path: /var/local/kube-volumes/prometheus-data
+            type: DirectoryOrCreate
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.51.2
+          ports:
+            - containerPort: 9090
+          env: []
+          volumeMounts:
+            - name: hass-prometheus-token
+              subPath: hass_prometheus_token
+              mountPath: /secrets/hass_prometheus_token
+              readOnly: true
+            - name: prometheus-config
+              subPath: prometheus.yaml
+              mountPath: /etc/prometheus/prometheus.yml
+              readOnly: true
+            - name: data
+              mountPath: /prometheus
+          resources:
+            requests:
+              cpu: "0"
+              memory: "0"
+            limits:
+              cpu: 200m
+              memory: 700Mi
+      terminationGracePeriodSeconds: 10
+      tolerations:
+        - key: edge
+          operator: Equal
+          value: homenuc
+          effect: NoExecute
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node.kubernetes.io/type
+                    operator: In
+                    values:
+                      - homenuc

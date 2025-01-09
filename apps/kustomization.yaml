@@ -7,8 +7,8 @@ resources:
   - kodi-connect
   - homehub
   - homenvr
-  # - pirate
+  - pirate
   - garden
-  # - freshrss
-  # - measurement
+  - freshrss
+  - measurement
   - tunnel

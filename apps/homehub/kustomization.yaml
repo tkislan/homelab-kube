@@ -10,12 +10,12 @@ resources:
   - secrets.yaml
   - mosquitto-config.yaml
 
-  # - mosquitto.yaml
-  # - unifi-mongo.yaml
-  # - unifi.yaml
-  # - postgres12.yaml
-  # - paradox.yaml
-  # - zwavejs.yaml
-  # - zigbeemqtt.yaml
+  - mosquitto.yaml
+  - unifi-mongo.yaml
+  - unifi.yaml
+  - postgres.yaml
+  - paradox.yaml
+  - zwavejs.yaml
+  - zigbeemqtt.yaml
 
-  # - hass.yaml
+  - hass.yaml

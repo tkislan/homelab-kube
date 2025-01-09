@@ -1,0 +1,72 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres12
+  namespace: homepi
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+      protocol: TCP
+  selector:
+    app: postgres12
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres12
+  namespace: homepi
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  serviceName: postgres12
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres12
+  template:
+    metadata:
+      labels:
+        app: postgres12
+    spec:
+      volumes:
+        - name: postgres-data
+          hostPath:
+            path: /var/local/kube-volumes/postgres12-data
+            type: DirectoryOrCreate
+      containers:
+        - name: postgres
+          image: postgres:12.9-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: hass
+            - name: POSTGRES_DB
+              value: hass
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: password
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+      terminationGracePeriodSeconds: 10
+      tolerations:
+        - key: edge
+          operator: Equal
+          value: homenuc
+          effect: NoExecute
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: edge
+                    operator: In
+                    values:
+                      - homenuc

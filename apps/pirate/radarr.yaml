@@ -2,20 +2,20 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: jackett
+  name: radarr
   namespace: pirate
 spec:
   ports:
-    - port: 9117
-      targetPort: 9117
+    - port: 7878
+      targetPort: 7878
       protocol: TCP
   selector:
-    app: jackett
+    app: radarr
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: jackett
+  name: radarr
   namespace: pirate
   annotations:
     kubernetes.io/ingress.class: traefik
@@ -27,43 +27,47 @@ metadata:
 spec:
   tls:
     - hosts:
-        - jackett.kislan.sk
-      secretName: jackett-kislan-sk
+        - movies.kislan.sk
+      secretName: radarr-movies-kislan-sk
   rules:
-    - host: jackett.kislan.sk
+    - host: movies.kislan.sk
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: jackett
+                name: radarr
                 port:
-                  number: 9117
+                  number: 7878
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: jackett
+  name: radarr
   namespace: pirate
 spec:
-  serviceName: jackett
+  serviceName: radarr
   selector:
     matchLabels:
-      app: jackett
+      app: radarr
   replicas: 1
   template:
     metadata:
       labels:
-        app: jackett
+        app: radarr
     spec:
       containers:
-        - name: jackett
-          image: linuxserver/jackett:0.21.2580
+        - name: radarr
+          image: linuxserver/radarr:version-5.4.6.8723
           imagePullPolicy: Always
           volumeMounts:
             - name: config
               mountPath: /config
+            - name: downloads
+              mountPath: /downloads
+            - name: library
+              mountPath: /movies
           env:
             - name: PUID
               value: "0"
@@ -74,12 +78,20 @@ spec:
       volumes:
         - name: config
           hostPath:
-            path: /var/local/kube-volumes/jackett-config
+            path: /var/local/kube-volumes/radarr3-config
             type: DirectoryOrCreate
-      tolerations:
+        - name: downloads
+          hostPath:
+            path: /root/storage/pirate/downloads
+            type: DirectoryOrCreate
+        - name: library
+          hostPath:
+            path: /root/storage/pirate/library/movies
+            type: DirectoryOrCreate
+      toleration:
         - key: edge
           operator: Equal
-          value: "homenuc"
+          value: homenuc
           effect: NoExecute
       affinity:
         nodeAffinity:

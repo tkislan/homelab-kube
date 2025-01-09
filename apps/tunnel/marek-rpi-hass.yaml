@@ -81,9 +81,10 @@ spec:
             name: ssh-tunnel-cfg
             defaultMode: 0777
         - name: config
-          hostPath:
-            path: /var/local/kube-volumes/tunnel-marek-hass
-            type: DirectoryOrCreate
+          emptyDir: {}
+          # hostPath:
+          #   path: /var/local/kube-volumes/tunnel-marek-hass
+          #   type: DirectoryOrCreate
       containers:
         - name: tunnel
           image: linuxserver/openssh-server:8.1_p1-r0-ls13

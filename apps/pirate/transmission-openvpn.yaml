@@ -1,0 +1,157 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transmission-openvpn
+  namespace: pirate
+spec:
+  ports:
+    - port: 9091
+      targetPort: 9091
+      protocol: TCP
+  selector:
+    app: transmission-openvpn
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: transmission-openvpn
+  namespace: pirate
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/frontend-entry-points: http
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt"
+
+spec:
+  tls:
+    - hosts:
+        - transmission.kislan.sk
+      secretName: transmission-kislan-sk
+  rules:
+    - host: transmission.kislan.sk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: transmission-openvpn
+                port:
+                  number: 9091
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: transmission-openvpn-scripts
+  namespace: pirate
+  labels:
+    app: transmission-openvpn
+data:
+  openvpn-post-config.sh: |
+    #!/bin/bash -xe
+
+    echo 'pull-filter ignore "ifconfig-ipv6 "' >> "$1"
+    echo 'pull-filter ignore "route-ipv6 "' >> "$1"
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: transmission-openvpn
+  namespace: pirate
+spec:
+  serviceName: transmission-openvpn
+  selector:
+    matchLabels:
+      app: transmission-openvpn
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: transmission-openvpn
+    spec:
+      containers:
+        - name: transmission-openvpn
+          image: haugene/transmission-openvpn:5.3.1
+          imagePullPolicy: Always
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+            - name: config
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads
+          env:
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
+            - name: TZ
+              value: Europe/Bratislava
+            - name: CREATE_TUN_DEVICE
+              value: "true"
+            - name: OPENVPN_PROVIDER
+              value: "MULLVAD"
+            - name: OPENVPN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mullvadvpn
+                  key: account_id
+            - name: OPENVPN_PASSWORD
+              value: "dummy"
+            - name: OPENVPN_CONFIG
+              value: "no_all"
+            - name: LOCAL_NETWORK
+              value: "10.244.0.0/16"
+            - name: TRANSMISSION_HOME
+              value: /config
+            - name: TRANSMISSION_DOWNLOAD_DIR
+              value: /downloads/complete
+            - name: TRANSMISSION_INCOMPLETE_DIR
+              value: /downloads/incomplete
+            - name: TRANSMISSION_WATCH_DIR
+              value: /downloads/watch
+            - name: TRANSMISSION_RPC_AUTHENTICATION_REQUIRED
+              value: "true"
+            - name: TRANSMISSION_RPC_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: transmission
+                  key: username
+            - name: TRANSMISSION_RPC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: transmission
+                  key: password
+      volumes:
+        - name: scripts
+          configMap:
+            name: transmission-openvpn-scripts
+            defaultMode: 0777
+        - name: config
+          hostPath:
+            path: /var/local/kube-volumes/transmission-openvpn-config
+            type: DirectoryOrCreate
+        - name: downloads
+          hostPath:
+            path: /root/storage/pirate/downloads
+            type: DirectoryOrCreate
+      tolerations:
+        - key: edge
+          operator: Equal
+          value: homenuc
+          effect: NoExecute
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: edge
+                    operator: In
+                    values:
+                      - homenuc

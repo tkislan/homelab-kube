@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "hass"
+    metrics_path: /api/prometheus
+
+    authorization:
+      credentials_file: "/secrets/hass_prometheus_token"
+
+    static_configs:
+      - targets: ["hass.homepi.svc.cluster.local:8123"]

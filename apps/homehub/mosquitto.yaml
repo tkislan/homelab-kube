@@ -1,0 +1,140 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mosquitto
+  namespace: homepi
+spec:
+  ports:
+    - name: tcp
+      port: 1883
+      targetPort: 1883
+      protocol: TCP
+  selector:
+    app: mosquitto
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mosquitto
+  namespace: homepi
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  serviceName: mosquitto
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mosquitto
+  template:
+    metadata:
+      labels:
+        app: mosquitto
+    spec:
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      volumes:
+        - name: config-template
+          configMap:
+            name: mosquitto-cfg
+        - name: config
+          emptyDir: {}
+        - name: data
+          emptyDir: {}
+        - name: logs
+          emptyDir: {}
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
+      initContainers:
+        - name: config
+          image: eclipse-mosquitto:1.6.9
+          command:
+            - "/bin/sh"
+          args:
+            - "-ec"
+            - >
+              apk update;
+              apk add gettext;
+              envsubst < /mosquitto/templates/password > /mosquitto/config/.password;
+              envsubst < /mosquitto/templates/mosquitto.conf > /mosquitto/config/mosquitto.conf;
+
+              mosquitto_passwd -U /mosquitto/config/.password;
+          env:
+            - name: HASS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mosquitto-passwords
+                  key: hass_password
+            - name: PARADOX_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mosquitto-passwords
+                  key: paradox_password
+            - name: JETSON_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mosquitto-passwords
+                  key: jetson_password
+            - name: POOLPI_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mosquitto-passwords
+                  key: poolpi_password
+            - name: HELENKAPI_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mosquitto-passwords
+                  key: helenkapi_password
+            - name: ZIGBEE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mosquitto-passwords
+                  key: zigbee_password
+            - name: FRIGATE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mosquitto-passwords
+                  key: frigate_password
+            - name: CLOUD_MOSQUITTO_ADDRESS
+              value: "local-cloud-mosquitto.homepi.svc.cluster.local:1883"
+            - name: CLOUD_MOSQUITTO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cloud-mosquitto-passwords
+                  key: homepi_password
+          volumeMounts:
+            - name: config
+              mountPath: /mosquitto/config
+            - name: config-template
+              mountPath: /mosquitto/templates
+      containers:
+        - name: mosquitto
+          image: eclipse-mosquitto:1.6.9
+          ports:
+            - containerPort: 1883
+          volumeMounts:
+            - name: config
+              mountPath: /mosquitto/config
+            - name: data
+              mountPath: /mosquitto/data
+            - name: logs
+              mountPath: /mosquitto/log
+            - name: localtime
+              mountPath: /etc/localtime
+              readOnly: true
+      terminationGracePeriodSeconds: 10
+      tolerations:
+        - key: edge
+          operator: Equal
+          value: homenuc
+          effect: NoExecute
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: edge
+                    operator: In
+                    values:
+                      - homenuc

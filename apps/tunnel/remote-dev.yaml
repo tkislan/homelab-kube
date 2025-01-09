@@ -1,0 +1,163 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: coder-wildcard-kislan-sk
+  namespace: tunnel
+spec:
+  secretName: coder-wildcard-kislan-sk
+  dnsNames:
+    - "*.coder.kislan.sk"
+  issuerRef:
+    name: letsencrypt-dns
+    kind: ClusterIssuer
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: coder-main-kislan-sk
+  namespace: tunnel
+spec:
+  secretName: coder-main-kislan-sk
+  dnsNames:
+    - "coder.kislan.sk"
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: workspace-remote-dev
+  namespace: tunnel
+spec:
+  type: NodePort
+  ports:
+    - port: 2222
+      targetPort: 2222
+      protocol: TCP
+      nodePort: 32203
+  selector:
+    app: remote-dev
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: workspace-remote-dev-coder
+  namespace: tunnel
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+  selector:
+    app: remote-dev
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: workspace-remote-dev-coder
+  namespace: tunnel
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/frontend-entry-points: http
+    # cert-manager.io/cluster-issuer: "letsencrypt"
+
+spec:
+  tls:
+    - hosts:
+        - coder.kislan.sk
+      secretName: coder-main-kislan-sk
+    - hosts:
+        - "*.coder.kislan.sk"
+      secretName: coder-wildcard-kislan-sk
+  rules:
+    - host: coder.kislan.sk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: workspace-remote-dev-coder
+                port:
+                  number: 3000
+    - host: "*.coder.kislan.sk"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: workspace-remote-dev-coder
+                port:
+                  number: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: remote-dev
+  namespace: tunnel
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: remote-dev
+  template:
+    metadata:
+      labels:
+        app: remote-dev
+    spec:
+      volumes:
+        - name: ssh-tunnel-config
+          configMap:
+            name: ssh-tunnel-cfg
+            defaultMode: 0777
+        - name: config
+          emptyDir: {}
+          # hostPath:
+          #   path: /var/local/kube-volumes/tunnel-remote-dev
+          #   type: DirectoryOrCreate
+      containers:
+        - name: tunnel
+          image: linuxserver/openssh-server:8.1_p1-r0-ls13
+          ports:
+            - containerPort: 2222
+            - containerPort: 3000
+            - containerPort: 7000
+            - containerPort: 7001
+          env:
+            - name: USER_NAME
+              value: tunnel
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: workspace-remote-dev
+                  key: public_key
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: ssh-tunnel-config
+              mountPath: /etc/cont-init.d/51-enable-forward
+              subPath: script
+            - name: ssh-tunnel-config
+              mountPath: /etc/cont-init.d/52-add-extra-ssh-key
+              subPath: extra-ssh-key-script
+          resources:
+            requests:
+              cpu: "0"
+              memory: "0"
+            limits:
+              cpu: 50m
+              memory: 25Mi
+      terminationGracePeriodSeconds: 10

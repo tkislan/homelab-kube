@@ -1,0 +1,74 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paradox
+  namespace: homepi
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  selector:
+    matchLabels:
+      app: paradox
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: paradox
+    spec:
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      containers:
+        - name: paradox
+          image: tkislan/paradox:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
+            limits:
+              cpu: 200m
+              memory: 300Mi
+          env:
+            - name: HOSTNAME
+              valueFrom:
+                secretKeyRef:
+                  name: paradox
+                  key: hostname
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: paradox
+                  key: username
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: paradox
+                  key: password
+            - name: PORT
+              value: "3000"
+            - name: MQTT_HOSTNAME
+              value: mosquitto.homepi.svc.cluster.local
+            - name: MQTT_PORT
+              value: "1883"
+            - name: MQTT_USERNAME
+              value: "paradox"
+            - name: MQTT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mosquitto-passwords
+                  key: paradox_password
+      tolerations:
+        - key: edge
+          operator: Equal
+          value: homenuc
+          effect: NoExecute
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: edge
+                    operator: In
+                    values:
+                      - homenuc
