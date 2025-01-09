@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - cluster-issuer.yaml
+  - traefik-https-redirect.yaml
   - metropolitan-real
   - kodi-connect
   - homehub
