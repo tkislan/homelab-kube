@@ -26,35 +26,35 @@ spec:
       nodePort: 32201
   selector:
     app: marek-rpi-hass
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: marek-rpi-hass
-#   namespace: tunnel
-#   annotations:
-#     kubernetes.io/ingress.class: traefik
-#     traefik.ingress.kubernetes.io/frontend-entry-points: http
-#     traefik.ingress.kubernetes.io/router.entrypoints: websecure
-#     traefik.ingress.kubernetes.io/router.tls: "true"
-#     cert-manager.io/cluster-issuer: "letsencrypt"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: marek-rpi-hass
+  namespace: tunnel
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/frontend-entry-points: http
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt"
 
-# spec:
-#   tls:
-#     - hosts:
-#         - marek-hass.kislan.sk
-#       secretName: marek-hass-kislan-sk
-#   rules:
-#     - host: marek-hass.kislan.sk
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: marek-rpi-hass-ingress
-#                 port:
-#                   number: 8080
+spec:
+  tls:
+    - hosts:
+        - marek-hass.kislan.sk
+      secretName: marek-hass-kislan-sk
+  rules:
+    - host: marek-hass.kislan.sk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: marek-rpi-hass-ingress
+                port:
+                  number: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
