@@ -1,25 +1,13 @@
 ---
-apiVersion: traefik.io/v1alpha1
-kind: ServersTransport
-metadata:
-  name: unifi
-  namespace: homepi
-spec:
-  insecureSkipVerify: true # Skip SSL verification
-
----
 apiVersion: v1
 kind: Service
 metadata:
   name: unifi
   namespace: homepi
-  annotations:
-    traefik.ingress.kubernetes.io/service.serversscheme: https # Set backend is HTTPS
-    traefik.ingress.kubernetes.io/service.serverstransport: homepi.unifi@kubernetescrd
 spec:
   ports:
-    - port: 8443
-      targetPort: 8443
+    - port: 8080
+      targetPort: 8080
       protocol: TCP
   selector:
     app: unifi
@@ -51,7 +39,7 @@ spec:
               service:
                 name: unifi
                 port:
-                  number: 8443
+                  number: 8080
 ---
 apiVersion: apps/v1
 kind: StatefulSet
