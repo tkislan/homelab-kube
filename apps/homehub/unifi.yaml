@@ -21,8 +21,7 @@ metadata:
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
-    traefik.ingress.kubernetes.io/frontend-entry-points: http
-    ingress.kubernetes.io/protocol: https
+    traefik.ingress.kubernetes.io/frontend-entry-points: https
     cert-manager.io/cluster-issuer: "letsencrypt"
 
 spec:
