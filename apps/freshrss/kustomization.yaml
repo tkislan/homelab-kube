@@ -7,5 +7,5 @@ resources:
   - namespace.yaml
   - serviceaccount.yaml
 
-  # - deployment.yaml
-  # - service.yaml
+  - deployment.yaml
+  - service.yaml
