@@ -2,6 +2,10 @@ name: Kustomize Build
 
 on: [push]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   kustomize_build:
     name: Kustomize Build
