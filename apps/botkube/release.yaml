@@ -14,7 +14,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: botkube
-        namespace: botkube
       interval: 5m
   releaseName: botkube
   values:
