@@ -38,3 +38,13 @@ spec:
           secretKeyRef:
             name: slack
             key: app-token
+      - name: BOTKUBE_COMMUNICATIONS_DEFAULT_GROUP_SOCKET__SLACK_BOT__TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: slack
+            key: bot-token
+      - name: BOTKUBE_COMMUNICATIONS_DEFAULT_GROUP_SOCKET__SLACK_APP__TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: slack
+            key: app-token
