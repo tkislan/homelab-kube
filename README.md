@@ -47,6 +47,11 @@ flux create source git infra \
 ```
 
 
+```
+flux reconcile source git infra && flux reconcile kustomization secrets && flux reconcile kustomization infra && flux reconcile kustomization apps
+```
+
+
 TODO - add `nohup`
 ```
 tailscaled --tun=userspace-networking --socks5-server=localhost:1055 --outbound-http-proxy-listen=localhost:1055

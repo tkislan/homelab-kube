@@ -26,28 +26,8 @@ spec:
           enabled: "true"
           channels:
             default:
-              name: "botkube"
+              name: "kube-homelab"
     extraEnv:
-      - name: BOTKUBE_COMMUNICATIONS_DEFAULT__GROUP_SOCKET__SLACK_BOT__TOKEN
-        valueFrom:
-          secretKeyRef:
-            name: slack
-            key: bot-token
-      - name: BOTKUBE_COMMUNICATIONS_DEFAULT__GROUP_SOCKET__SLACK_APP__TOKEN
-        valueFrom:
-          secretKeyRef:
-            name: slack
-            key: app-token
-      - name: BOTKUBE_COMMUNICATIONS_DEFAULT_GROUP_SOCKET__SLACK_BOT__TOKEN
-        valueFrom:
-          secretKeyRef:
-            name: slack
-            key: bot-token
-      - name: BOTKUBE_COMMUNICATIONS_DEFAULT_GROUP_SOCKET__SLACK_APP__TOKEN
-        valueFrom:
-          secretKeyRef:
-            name: slack
-            key: app-token
       - name: "BOTKUBE_COMMUNICATIONS_DEFAULT-GROUP_SOCKET__SLACK_BOT__TOKEN"
         valueFrom:
           secretKeyRef:
