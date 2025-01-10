@@ -10,10 +10,11 @@ spec:
   chart:
     spec:
       chart: botkube
-      version: "v1.14.4"
+      version: "1.14.4"
       sourceRef:
         kind: HelmRepository
         name: botkube
+        namespace: kube-system
       interval: 5m
   releaseName: botkube
   values:
