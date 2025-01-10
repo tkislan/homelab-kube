@@ -28,6 +28,9 @@ jobs:
       - name: Kustomize Build Secrets
         run: kubectl kustomize secrets/ | kubectl apply -f -
 
+      - name: Wait for Cert Manager Helm Release to reconcile
+        run: flux reconcile helmrelease -n cert-manager cert-manager
+
       - name: Kustomize Build Infra
         run: kubectl kustomize infra/ | kubectl apply -f -
 
