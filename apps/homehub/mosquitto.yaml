@@ -48,7 +48,7 @@ spec:
             path: /etc/localtime
       initContainers:
         - name: config
-          image: eclipse-mosquitto:1.6.9
+          image: eclipse-mosquitto:1.6.15
           command:
             - "/bin/sh"
           args:
@@ -110,7 +110,7 @@ spec:
               mountPath: /mosquitto/templates
       containers:
         - name: mosquitto
-          image: eclipse-mosquitto:1.6.9
+          image: eclipse-mosquitto:1.6.15
           ports:
             - containerPort: 1883
           volumeMounts:
