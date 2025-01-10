@@ -3,6 +3,7 @@
   "extends": [
     "config:recommended"
   ],
+  "prConcurrentLimit": 2,
   "flux": {
     "fileMatch": [
       "\\.ya?ml$"
