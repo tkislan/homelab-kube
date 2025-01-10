@@ -46,13 +46,6 @@ RUN rm -rf /tmp/k9s && mkdir /tmp/k9s && (cd /tmp/k9s && \
     k9s version) && \
     rm -rf /tmp/k9s
 
-# RUN cd /tmp && \
-#     curl -LO https://github.com/fluxcd/toolkit/releases/download/v0.1.7/gotk_0.1.7_linux_amd64.tar.gz && \
-#     tar -xf gotk_*.tar.gz && \
-#     chmod +x gotk && \
-#     mv gotk /usr/local/bin/gotk && \
-#     gotk --version
-
 RUN kubectl completion bash > /etc/bash_completion.d/kubectl
 
 ENV FLUX_FORWARD_NAMESPACE=flux

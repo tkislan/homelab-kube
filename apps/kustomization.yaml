@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - cluster-issuer.yaml
   - traefik-utils.yaml
+  - botkube
   - metropolitan-real
   - kodi-connect
   - homehub
