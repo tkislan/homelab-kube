@@ -10,7 +10,7 @@ jobs:
       # - name: Create k8s Kind Cluster
       #   uses: helm/kind-action@v1
       - name: Create k3s Cluster
-        uses: debianmaster/actions-k3s@master
+        uses: nolar/setup-k3d-k3s@v1
         with:
           version: "v1.31.4+k3s1"
 
