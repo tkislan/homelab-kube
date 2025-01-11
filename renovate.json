@@ -13,5 +13,17 @@
     "fileMatch": [
       "\\.ya?ml$"
     ]
-  }
+  },
+  "packageRules": [
+    {
+      "matchDatasources": [
+        "kubernetes"
+      ],
+      "matchPackageNames": [
+        "plexinc/pms-docker",
+        "linuxserver/openssh-server"
+      ],
+      "versioning": "loose"
+    }
+  ]
 }
