@@ -1,0 +1,104 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bazarr
+  namespace: pirate
+spec:
+  ports:
+    - port: 6767
+      targetPort: 6767
+      protocol: TCP
+  selector:
+    app: bazarr
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bazarr
+  namespace: pirate
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/frontend-entry-points: http
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt"
+
+spec:
+  tls:
+    - hosts:
+        - subtitles.kislan.sk
+      secretName: bazarr-subtitles-kislan-sk
+  rules:
+    - host: subtitles.kislan.sk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: bazarr
+                port:
+                  number: 6767
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bazarr
+  namespace: pirate
+spec:
+  serviceName: bazarr
+  selector:
+    matchLabels:
+      app: bazarr
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: bazarr
+    spec:
+      containers:
+        - name: bazarr
+          image: linuxserver/bazarr:5.4.6
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: library-movies
+              mountPath: /movies
+            - name: library-tv
+              mountPath: /tv
+          env:
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
+            - name: TZ
+              value: Europe/Bratislava
+      volumes:
+        - name: config
+          hostPath:
+            path: /var/local/kube-volumes/bazarr-config
+            type: DirectoryOrCreate
+        - name: library-movies
+          hostPath:
+            path: /root/storage/pirate/library/movies
+            type: DirectoryOrCreate
+        - name: library-tv
+          hostPath:
+            path: /root/storage/pirate/library/tvshows
+            type: DirectoryOrCreate
+      toleration:
+        - key: edge
+          operator: Equal
+          value: homenuc
+          effect: NoExecute
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: edge
+                    operator: In
+                    values:
+                      - homenuc

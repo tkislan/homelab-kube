@@ -8,9 +8,10 @@ resources:
   - serviceaccount.yaml
   - secrets.yaml
 
-  # - transmission-openvpn.yaml
-  # - jackett.yaml
-  # - sonarr.yaml
-  # - radarr.yaml
+  - transmission-openvpn.yaml
+  - jackett.yaml
+  - sonarr.yaml
+  - radarr.yaml
+  - bazarr.yaml
 
   - plex.yaml
