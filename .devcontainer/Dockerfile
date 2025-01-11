@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim
+FROM debian:12.8-slim
 
 RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history && mkdir -p /commandhistory"\
     && echo "$SNIPPET" >> "/root/.bashrc"
