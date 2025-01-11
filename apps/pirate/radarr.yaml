@@ -59,7 +59,7 @@ spec:
     spec:
       containers:
         - name: radarr
-          image: linuxserver/radarr:version-5.4.6.8723
+          image: linuxserver/radarr:5.4.6
           imagePullPolicy: Always
           volumeMounts:
             - name: config
