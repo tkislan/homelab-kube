@@ -76,6 +76,7 @@ spec:
           image: haugene/transmission-openvpn:5.3.1
           imagePullPolicy: Always
           securityContext:
+            privileged: true
             capabilities:
               add:
                 - NET_ADMIN
