@@ -28,8 +28,6 @@ spec:
       labels:
         name: zigbee
     spec:
-      dnsPolicy: ClusterFirstWithHostNet
-      hostNetwork: true
       volumes:
         - name: sonoff
           hostPath:

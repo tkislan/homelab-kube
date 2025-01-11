@@ -31,8 +31,6 @@ spec:
       labels:
         app: mosquitto
     spec:
-      dnsPolicy: ClusterFirstWithHostNet
-      hostNetwork: true
       volumes:
         - name: config-template
           configMap:

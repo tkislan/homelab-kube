@@ -16,9 +16,6 @@ spec:
       labels:
         app: pool-mqtt-gpio
     spec:
-      # TODO - remove host network once homenuc is migrated
-      dnsPolicy: ClusterFirstWithHostNet
-      hostNetwork: true
       securityContext:
         fsGroup: 997
       volumes:
@@ -47,9 +44,7 @@ spec:
               envsubst < /templates/config.yaml > /config/config.yml;
           env:
             - name: MQTT_HOSTNAME
-              # TODO - remove once homenuc is migrated
-              # value: mosquitto.homepi
-              value: 192.168.1.227
+              value: mosquitto.homepi
             - name: MQTT_PORT
               value: "1883"
             - name: MQTT_USERNAME
