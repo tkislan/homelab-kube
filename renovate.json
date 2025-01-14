@@ -8,6 +8,8 @@
   "reviewers": [
     "tkislan"
   ],
+  "automerge": true,
+  "automergeSchedule": "* 8-21 * * *",
   "flux": {
     "fileMatch": [
       "\\.ya?ml$"
