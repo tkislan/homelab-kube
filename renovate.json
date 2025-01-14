@@ -4,6 +4,9 @@
     "config:recommended"
   ],
   "prConcurrentLimit": 2,
+  "reviewers": [
+    "tkislan"
+  ],
   "flux": {
     "fileMatch": [
       "\\.ya?ml$"
