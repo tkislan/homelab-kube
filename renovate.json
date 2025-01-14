@@ -5,7 +5,7 @@
     ":separateMultipleMajorReleases"
   ],
   "prConcurrentLimit": 2,
-  "assignees": [
+  "reviewers": [
     "tkislan"
   ],
   "flux": {
