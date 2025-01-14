@@ -22,12 +22,7 @@ RUN rm -rf /tmp/helm && mkdir /tmp/helm && (cd /tmp/helm && \
     helm version) && \
     rm -rf /tmp/helm
 
-RUN rm -rf /tmp/flux && mkdir /tmp/flux && (cd /tmp/flux && \
-    curl -LO https://github.com/fluxcd/flux2/releases/download/v2.2.3/flux_2.2.3_linux_amd64.tar.gz && \
-    tar -xf flux_*_linux_amd64.tar.gz && \
-    mv flux /usr/local/bin/flux && \
-    flux --version) && \
-    rm -rf /tmp/flux
+RUN --mount=type=bind,source=./scripts,target=/scripts /scripts/install_flux.sh
 
 # RUN curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash && \
 #     mv ./kustomize /usr/local/bin/kustomize
