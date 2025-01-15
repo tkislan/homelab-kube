@@ -34,7 +34,7 @@ spec:
       volumes:
         - name: config-template
           configMap:
-            name: mosquitto-cfg
+            name: mosquitto-config
         - name: config
           emptyDir: {}
         - name: data
