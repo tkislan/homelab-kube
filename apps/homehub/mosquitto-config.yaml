@@ -16,6 +16,7 @@ data:
     zigbee:${ZIGBEE_PASSWORD}
     frigate:${FRIGATE_PASSWORD}
   mosquitto.conf: |
+    listener 1883
     log_type all
 
     allow_anonymous false
