@@ -3,12 +3,15 @@ kind: Kustomization
 
 namespace: garden
 
+configMapGenerator:
+  - name: pool-mqtt-gpio-config
+    files:
+      - config-map/config.yaml
+
 resources:
-- namespace.yaml
-- serviceaccount.yaml
+  - namespace.yaml
+  - serviceaccount.yaml
 
-- secrets.yaml
+  - secrets.yaml
 
-- pool-mqtt-gpio-config.yaml
-
-- pool-mqtt-gpio.yaml
+  - pool-mqtt-gpio.yaml

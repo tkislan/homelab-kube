@@ -1,0 +1,147 @@
+mqtt:
+  host: ${MQTT_HOSTNAME}
+  port: ${MQTT_PORT}
+  user: ${MQTT_USERNAME}
+  password: ${MQTT_PASSWORD}
+  topic_prefix: garden/pool
+
+gpio_modules:
+  - name: raspberrypi
+    module: raspberrypi
+
+sensor_modules:
+  - name: ds_inlet_temp
+    module: ds18b
+    type: DS18B20
+    address: 031700668eff
+
+  - name: ds_skimmer_temp
+    module: ds18b
+    type: DS18B20
+    address: 0417002321ff
+
+sensor_inputs:
+  - name: inlet_temp
+    module: ds_inlet_temp
+    interval: 10
+    digits: 1
+    retain: yes
+
+  - name: skimmer_temp
+    module: ds_skimmer_temp
+    interval: 10
+    digits: 1
+    retain: yes
+
+digital_outputs:
+  - name: relay1
+    module: raspberrypi
+    pin: 5
+    on_payload: "ON"
+    off_payload: "OFF"
+    initial: low
+    publish_initial: true
+    retain: yes # This option value controls if the message is retained. Default is no.
+
+  - name: relay2
+    module: raspberrypi
+    pin: 6
+    on_payload: "ON"
+    off_payload: "OFF"
+    initial: low
+    publish_initial: true
+    retain: yes # This option value controls if the message is retained. Default is no.
+
+  - name: relay3
+    module: raspberrypi
+    pin: 13
+    on_payload: "ON"
+    off_payload: "OFF"
+    initial: low
+    publish_initial: true
+    retain: yes # This option value controls if the message is retained. Default is no.
+
+  - name: relay4
+    module: raspberrypi
+    pin: 19
+    on_payload: "ON"
+    off_payload: "OFF"
+    initial: low
+    publish_initial: true
+    retain: yes # This option value controls if the message is retained. Default is no.
+
+  - name: relay5
+    module: raspberrypi
+    pin: 26
+    on_payload: "ON"
+    off_payload: "OFF"
+    initial: low
+    publish_initial: true
+    retain: yes # This option value controls if the message is retained. Default is no.
+
+  - name: relay6
+    module: raspberrypi
+    pin: 16
+    on_payload: "ON"
+    off_payload: "OFF"
+    initial: low
+    publish_initial: true
+    retain: yes # This option value controls if the message is retained. Default is no.
+
+  - name: relay7
+    module: raspberrypi
+    pin: 20
+    on_payload: "ON"
+    off_payload: "OFF"
+    initial: low
+    publish_initial: true
+    retain: yes # This option value controls if the message is retained. Default is no.
+
+  - name: relay8
+    module: raspberrypi
+    pin: 21
+    on_payload: "ON"
+    off_payload: "OFF"
+    initial: low
+    publish_initial: true
+    retain: yes # This option value controls if the message is retained. Default is no.
+
+  - name: relay21
+    module: raspberrypi
+    pin: 22
+    on_payload: "ON"
+    off_payload: "OFF"
+    initial: high
+    inverted: true
+    publish_initial: true
+    retain: yes # This option value controls if the message is retained. Default is no.
+
+  - name: relay22
+    module: raspberrypi
+    pin: 27
+    on_payload: "ON"
+    off_payload: "OFF"
+    initial: high
+    inverted: true
+    publish_initial: true
+    retain: yes # This option value controls if the message is retained. Default is no.
+
+  - name: relay23
+    module: raspberrypi
+    pin: 17
+    on_payload: "ON"
+    off_payload: "OFF"
+    initial: high
+    inverted: true
+    publish_initial: true
+    retain: yes # This option value controls if the message is retained. Default is no.
+
+  - name: relay24
+    module: raspberrypi
+    pin: 23
+    on_payload: "ON"
+    off_payload: "OFF"
+    initial: high
+    inverted: true
+    publish_initial: true
+    retain: yes # This option value controls if the message is retained. Default is no.

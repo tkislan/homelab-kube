@@ -21,7 +21,7 @@ spec:
       volumes:
         - name: config-template
           configMap:
-            name: pool-mqtt-gpio-cfg
+            name: pool-mqtt-gpio-config
         - name: config
           emptyDir: {}
         - name: bus
