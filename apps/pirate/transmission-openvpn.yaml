@@ -41,20 +41,6 @@ spec:
                 port:
                   number: 9091
 ---
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: transmission-openvpn-scripts
-  namespace: pirate
-  labels:
-    app: transmission-openvpn
-data:
-  openvpn-post-config.sh: |
-    #!/bin/bash -xe
-
-    echo 'pull-filter ignore "ifconfig-ipv6 "' >> "$1"
-    echo 'pull-filter ignore "route-ipv6 "' >> "$1"
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:

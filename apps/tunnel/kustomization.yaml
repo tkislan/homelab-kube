@@ -3,11 +3,16 @@ kind: Kustomization
 
 namespace: tunnel
 
+configMapGenerator:
+  - name: ssh-tunnel-config
+    files:
+      - config-map/script
+      - config-map/extra-ssh-key-script
+
 resources:
   - namespace.yaml
   - serviceaccount.yaml
 
-  - ssh-tunnel-config.yaml
   - secrets.yaml
 
   - marek-rpi-hass.yaml

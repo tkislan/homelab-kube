@@ -117,13 +117,10 @@ spec:
       volumes:
         - name: ssh-tunnel-config
           configMap:
-            name: ssh-tunnel-cfg
+            name: ssh-tunnel-config
             defaultMode: 0777
         - name: config
           emptyDir: {}
-          # hostPath:
-          #   path: /var/local/kube-volumes/tunnel-remote-dev
-          #   type: DirectoryOrCreate
       containers:
         - name: tunnel
           image: linuxserver/openssh-server:8.1_p1-r0-ls13
