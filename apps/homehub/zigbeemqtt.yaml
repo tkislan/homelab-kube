@@ -43,7 +43,7 @@ spec:
             type: DirectoryOrCreate
       containers:
         - name: zigbee
-          image: koenkk/zigbee2mqtt:1.42.0
+          image: koenkk/zigbee2mqtt:2.0.0
           ports:
             - containerPort: 18080
               name: http
