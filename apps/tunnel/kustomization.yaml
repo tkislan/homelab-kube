@@ -16,4 +16,4 @@ resources:
   - secrets.yaml
 
   - marek-rpi-hass.yaml
-  - remote-dev.yaml
+  # - remote-dev.yaml
