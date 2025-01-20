@@ -20,6 +20,10 @@ spec:
   values:
     settings:
       clusterName: "homelab"
+    executors:
+      k8s-default-tools:
+        botkube/kubectl:
+          enabled: true
     communications:
       default-group:
         socketSlack:
