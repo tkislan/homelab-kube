@@ -37,7 +37,7 @@ spec:
             type: DirectoryOrCreate
       containers:
         - name: mongo
-          image: mongo:7.0.9
+          image: mongo:7.0.16
           env:
             - name: MONGO_INITDB_DATABASE
               value: unifi
