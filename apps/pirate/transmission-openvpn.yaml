@@ -21,15 +21,15 @@ spec:
   type: NodePort
   ports:
     - name: tcp
-      port: 32700
-      targetPort: 32700
+      port: 51413
+      targetPort: 51413
       protocol: TCP
-      nodePort: 32700
+      nodePort: 51413
     - name: udp
-      port: 32700
-      targetPort: 32700
+      port: 51413
+      targetPort: 51413
       protocol: UDP
-      nodePort: 32700
+      nodePort: 51413
   selector:
     app: transmission-openvpn
 ---
