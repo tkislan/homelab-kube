@@ -79,7 +79,7 @@ spec:
             type: DirectoryOrCreate
       containers:
         - name: plex
-          image: plexinc/pms-docker:1.40.2.8395-c67dce28e
+          image: plexinc/pms-docker:1.41.3.9314-a0bfb8370
           imagePullPolicy: IfNotPresent
           livenessProbe:
             tcpSocket:
