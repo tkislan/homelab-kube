@@ -64,9 +64,9 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: /downloads
+            - name: downloads
               mountPath: /downloads
-            - name: /downloads2
+            - name: downloads2
               mountPath: /downloads2
             - name: library
               mountPath: /tv
