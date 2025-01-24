@@ -75,7 +75,7 @@ spec:
             type: DirectoryOrCreate
         - name: tvshows
           hostPath:
-            path: /root/storage/pirate/library/tvshows
+            path: /root/storage2/pirate/library/tvshows
             type: DirectoryOrCreate
       containers:
         - name: plex

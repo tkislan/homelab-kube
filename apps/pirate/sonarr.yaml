@@ -64,8 +64,10 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: downloads
+            - name: /downloads
               mountPath: /downloads
+            - name: /downloads2
+              mountPath: /downloads2
             - name: library
               mountPath: /tv
           env:
@@ -84,9 +86,13 @@ spec:
           hostPath:
             path: /root/storage/pirate/downloads
             type: DirectoryOrCreate
+        - name: downloads2
+          hostPath:
+            path: /root/storage2/pirate/downloads
+            type: DirectoryOrCreate
         - name: library
           hostPath:
-            path: /root/storage/pirate/library/tvshows
+            path: /root/storage2/pirate/library/tvshows
             type: DirectoryOrCreate
       tolerations:
         - key: edge

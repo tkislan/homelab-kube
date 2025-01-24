@@ -94,6 +94,8 @@ spec:
               mountPath: /config
             - name: downloads
               mountPath: /downloads
+            - name: downloads2
+              mountPath: /downloads2
           env:
             - name: PUID
               value: "0"
@@ -148,6 +150,10 @@ spec:
         - name: downloads
           hostPath:
             path: /root/storage/pirate/downloads
+            type: DirectoryOrCreate
+        - name: downloads2
+          hostPath:
+            path: /root/storage2/pirate/downloads
             type: DirectoryOrCreate
       tolerations:
         - key: edge

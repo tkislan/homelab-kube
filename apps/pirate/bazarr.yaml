@@ -86,7 +86,7 @@ spec:
             type: DirectoryOrCreate
         - name: library-tv
           hostPath:
-            path: /root/storage/pirate/library/tvshows
+            path: /root/storage2/pirate/library/tvshows
             type: DirectoryOrCreate
       tolerations:
         - key: edge
