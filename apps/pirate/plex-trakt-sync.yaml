@@ -21,16 +21,16 @@ spec:
             - name: plextraktsync
               image: ghcr.io/taxel/plextraktsync:0.33.0
               imagePullPolicy: Always
-              command:
+              args:
                 - sync
               volumeMounts:
                 - name: config
                   mountPath: /app/config
               env:
                 - name: PUID
-                  value: "0"
+                  value: "1000"
                 - name: PGID
-                  value: "0"
+                  value: "1000"
                 - name: TZ
                   value: Europe/Bratislava
                 - name: PLEX_USERNAME
