@@ -28,9 +28,9 @@ spec:
                   mountPath: /app/config
               env:
                 - name: PUID
-                  value: "1000"
+                  value: "0"
                 - name: PGID
-                  value: "1000"
+                  value: "0"
                 - name: TZ
                   value: Europe/Bratislava
                 - name: PLEX_USERNAME
