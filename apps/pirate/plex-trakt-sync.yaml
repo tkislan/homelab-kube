@@ -21,6 +21,8 @@ spec:
             - name: plextraktsync
               image: ghcr.io/taxel/plextraktsync:0.33.0
               imagePullPolicy: Always
+              command:
+                - sync
               volumeMounts:
                 - name: config
                   mountPath: /app/config
