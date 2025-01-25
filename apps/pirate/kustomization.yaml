@@ -20,3 +20,4 @@ resources:
   - bazarr.yaml
 
   - plex.yaml
+  - plex-trakt-sync.yaml
