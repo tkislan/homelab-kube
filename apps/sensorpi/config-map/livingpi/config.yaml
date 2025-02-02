@@ -5,6 +5,10 @@ mqtt:
   password: ${MQTT_PASSWORD}
   topic_prefix: sensorpi/livingpi
 
+gpio_modules:
+  - name: rpi_gpio
+    module: raspberrypi
+
 sensor_modules:
   - name: dht22_sensor
     module: dht22
