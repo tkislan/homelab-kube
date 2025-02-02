@@ -5,6 +5,10 @@ mqtt:
   password: ${MQTT_PASSWORD}
   topic_prefix: garden/pool
 
+gpio_modules:
+  - name: raspberrypi
+    module: raspberrypi
+
 sensor_modules:
   - name: ds_inlet_temp
     module: ds18b
