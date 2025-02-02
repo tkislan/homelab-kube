@@ -63,6 +63,11 @@ spec:
         - name: livingpi-mqtt-gpio
           image: flyte/mqtt-io:2.6.0
           imagePullPolicy: Always
+          command:
+            - "/bin/sh"
+            - "-ec"
+          args:
+            - "venv/bin/python -m pip install rpi.gpio && venv/bin/python -m mqtt_io /config.yml"
           securityContext:
             privileged: true
             runAsUser: 0
