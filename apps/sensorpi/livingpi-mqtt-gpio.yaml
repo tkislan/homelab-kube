@@ -48,7 +48,7 @@ spec:
             - name: MQTT_PORT
               value: "1883"
             - name: MQTT_USERNAME
-              value: livingpipi
+              value: livingpi
             - name: MQTT_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -85,7 +85,7 @@ spec:
       tolerations:
         - key: edge
           operator: Equal
-          value: livingpipi
+          value: livingpi
           effect: NoExecute
       affinity:
         nodeAffinity:
@@ -95,4 +95,4 @@ spec:
                   - key: edge
                     operator: In
                     values:
-                      - livingpipi
+                      - livingpi
