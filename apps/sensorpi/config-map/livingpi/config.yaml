@@ -1,0 +1,40 @@
+mqtt:
+  host: ${MQTT_HOSTNAME}
+  port: ${MQTT_PORT}
+  user: ${MQTT_USERNAME}
+  password: ${MQTT_PASSWORD}
+  topic_prefix: sensorpi/livingpi
+
+gpio_modules:
+  - name: raspberrypi
+    module: raspberrypi
+
+sensor_modules:
+  - name: dht22_sensor
+    module: dht22
+    type: AM2302
+    pin: 4
+
+  - name: mhz19
+    module: mhz19
+    device: "/dev/ttyAMA0"
+    range: 5000
+
+sensor_inputs:
+  - name: temperature
+    module: dht22_sensor
+    interval: 300
+    digits: 4
+    type: temperature
+
+  - name: humidity
+    module: dht22_sensor
+    interval: 300
+    digits: 4
+    type: humidity
+
+  - name: co2_mhz19
+    module: mhz19
+    interval: 300
+    ha_discovery:
+      device_class: carbon_dioxide

@@ -1,0 +1,98 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: livingpi-mqtt-gpio
+  namespace: sensorpi
+spec:
+  selector:
+    matchLabels:
+      app: livingpi-mqtt-gpio
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: livingpi-mqtt-gpio
+    spec:
+      securityContext:
+        fsGroup: 997
+      volumes:
+        - name: config-template
+          configMap:
+            name: livingpi-mqtt-gpio-config
+        - name: config
+          emptyDir: {}
+        - name: bus
+          hostPath:
+            path: /sys/bus
+            type: Directory
+        - name: devmem
+          hostPath:
+            path: /dev/mem
+            type: CharDevice
+      initContainers:
+        - name: config
+          image: alpine:3
+          command:
+            - "/bin/sh"
+          args:
+            - "-ec"
+            - >
+              apk add gettext;
+              envsubst < /templates/config.yaml > /config/config.yml;
+          env:
+            - name: MQTT_HOSTNAME
+              value: mosquitto.homepi
+            - name: MQTT_PORT
+              value: "1883"
+            - name: MQTT_USERNAME
+              value: livingpipi
+            - name: MQTT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mosquitto-passwords
+                  key: mqtt_password
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: config-template
+              mountPath: /templates
+      containers:
+        - name: livingpi-mqtt-gpio
+          image: flyte/mqtt-io:2.6.0
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+            runAsUser: 0
+            runAsGroup: 0
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
+            limits:
+              cpu: 750m
+              memory: 150Mi
+          volumeMounts:
+            - name: config
+              subPath: config.yml
+              mountPath: /config.yml
+            - name: bus
+              mountPath: /sys/bus
+            - name: devmem
+              mountPath: /dev/mem
+      tolerations:
+        - key: edge
+          operator: Equal
+          value: livingpipi
+          effect: NoExecute
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: edge
+                    operator: In
+                    values:
+                      - livingpipi
