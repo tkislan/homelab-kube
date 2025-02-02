@@ -91,6 +91,11 @@ spec:
                 secretKeyRef:
                   name: mosquitto-passwords
                   key: zigbee_password
+            - name: LIVINGPI_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mosquitto-passwords
+                  key: livingpi_password
             - name: FRIGATE_PASSWORD
               valueFrom:
                 secretKeyRef:
