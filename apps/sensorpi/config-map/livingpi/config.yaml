@@ -8,7 +8,7 @@ mqtt:
 sensor_modules:
   - name: dht22_sensor
     module: dht22
-    type: AM2302
+    type: dht22
     pin: 4
 
   - name: mhz19
