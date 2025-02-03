@@ -5,6 +5,10 @@ mqtt:
   password: ${MQTT_PASSWORD}
   topic_prefix: sensorpi/livingpi
 
+gpio_modules:
+  - name: raspberrypi
+    module: raspberrypi
+
 sensor_modules:
   - name: dht22_sensor
     module: dht22
@@ -34,3 +38,13 @@ sensor_inputs:
     interval: 10
     ha_discovery:
       device_class: carbon_dioxide
+
+digital_outputs:
+  - name: dummy
+    module: raspberrypi
+    pin: 5
+    on_payload: "ON"
+    off_payload: "OFF"
+    initial: low
+    publish_initial: true
+    retain: yes
