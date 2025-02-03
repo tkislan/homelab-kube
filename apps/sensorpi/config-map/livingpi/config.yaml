@@ -19,18 +19,18 @@ sensor_modules:
 sensor_inputs:
   - name: temperature
     module: dht22_sensor
-    interval: 300
+    interval: 10
     digits: 4
     type: temperature
 
   - name: humidity
     module: dht22_sensor
-    interval: 300
+    interval: 10
     digits: 4
     type: humidity
 
   - name: co2_mhz19
     module: mhz19
-    interval: 300
+    interval: 10
     ha_discovery:
       device_class: carbon_dioxide
