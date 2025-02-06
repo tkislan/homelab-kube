@@ -18,6 +18,7 @@ resources:
   - sonarr.yaml
   - radarr.yaml
   - bazarr.yaml
+  - overseerr.yaml
 
   - plex.yaml
   - plex-trakt-sync.yaml

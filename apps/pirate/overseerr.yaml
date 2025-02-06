@@ -1,0 +1,89 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: overseerr
+  namespace: pirate
+spec:
+  ports:
+    - port: 5055
+      targetPort: 5055
+      protocol: TCP
+  selector:
+    app: overseerr
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: overseerr
+  namespace: pirate
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/frontend-entry-points: http
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt"
+spec:
+  tls:
+    - hosts:
+        - media-discovery.kislan.sk
+      secretName: overseerr-media-discovery-kislan-sk
+  rules:
+    - host: media-discovery.kislan.sk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: overseerr
+                port:
+                  number: 5055
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: overseerr
+  namespace: pirate
+spec:
+  serviceName: overseerr
+  selector:
+    matchLabels:
+      app: overseerr
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: overseerr
+    spec:
+      containers:
+        - name: overseerr
+          image: sctx/overseerr:1.33.2
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: config
+              mountPath: /app/config
+          env:
+            - name: TZ
+              value: Europe/Bratislava
+            - name: LOG_LEVEL
+              value: "info"
+      volumes:
+        - name: config
+          hostPath:
+            path: /var/local/kube-volumes/overseerr-config
+            type: DirectoryOrCreate
+      tolerations:
+        - key: edge
+          operator: Equal
+          value: homenuc
+          effect: NoExecute
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: edge
+                    operator: In
+                    values:
+                      - homenuc
