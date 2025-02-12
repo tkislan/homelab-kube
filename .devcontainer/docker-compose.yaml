@@ -12,6 +12,7 @@ services:
       - $HOME/.ssh:/root/.ssh
       - ../.dev/volumes/kube:/root/.kube
       - ../.dev/volumes/tailscale:/var/lib/tailscale
+      - ../.dev/volumes/k9s:/root/.config/k9s
       - commandhistory:/commandhistory
     cap_add:
       - net_admin
