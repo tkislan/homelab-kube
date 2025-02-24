@@ -18,6 +18,7 @@ resources:
   - sonarr.yaml
   - radarr.yaml
   - bazarr.yaml
+  - prowlarr.yaml
   - overseerr.yaml
 
   - plex.yaml
