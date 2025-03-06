@@ -76,7 +76,7 @@ spec:
             type: DirectoryOrCreate
       containers:
         - name: prometheus
-          image: prom/prometheus:v3.2.0
+          image: prom/prometheus:v3.2.1
           ports:
             - containerPort: 9090
           env: []
