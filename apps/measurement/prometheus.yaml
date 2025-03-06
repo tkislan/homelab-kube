@@ -77,6 +77,10 @@ spec:
       containers:
         - name: prometheus
           image: prom/prometheus:v3.2.1
+          command:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus"
+            - "--storage.tsdb.retention.time=10y"
           ports:
             - containerPort: 9090
           env: []
