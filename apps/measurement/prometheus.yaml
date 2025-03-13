@@ -78,7 +78,7 @@ spec:
         - name: prometheus
           image: prom/prometheus:v3.2.1
           args:
-            - --config.file=/etc/prometheus/prometheus.yml
+            - --config.file=/etc/prometheus/prometheus.yaml
             - --storage.tsdb.path=/prometheus
             - --storage.tsdb.retention.time=10y
           ports:
@@ -91,7 +91,7 @@ spec:
               readOnly: true
             - name: prometheus-config
               subPath: prometheus.yaml
-              mountPath: /etc/prometheus/prometheus.yml
+              mountPath: /etc/prometheus/prometheus.yaml
               readOnly: true
             - name: data
               mountPath: /prometheus
