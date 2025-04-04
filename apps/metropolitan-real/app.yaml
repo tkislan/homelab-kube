@@ -101,7 +101,7 @@ spec:
         - name: gitlab-docker-registry-credentials
       containers:
         - name: metropolitanreal-app
-          image: registry.gitlab.com/metropolitan-real/metropolitan-real:app-1144136351-master-811a153c2a1f83a3ddfcbf36807267395a07edf5
+          image: registry.gitlab.com/metropolitan-real/metropolitan-real:app-1752114423-master-0263f5d9637ddac39a6c13e27d92004e407dad27
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9000
@@ -111,6 +111,8 @@ spec:
                 secretKeyRef:
                   name: postgres
                   key: password
+            - name: PORT
+              value: "9000"
             - name: DATABASE_URL
               value: postgres://metropolitanreal:$(PG_PASSWORD)@postgres/metropolitanreal
           resources:
