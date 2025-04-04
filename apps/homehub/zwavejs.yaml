@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
         - name: zwave
-          image: zwavejs/zwave-js-ui:9.31.0
+          image: zwavejs/zwave-js-ui:9.33.1
           livenessProbe:
             failureThreshold: 12
             httpGet:
