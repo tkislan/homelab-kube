@@ -43,4 +43,6 @@ RUN rm -rf /tmp/k9s && mkdir /tmp/k9s && (cd /tmp/k9s && \
 
 RUN kubectl completion bash > /etc/bash_completion.d/kubectl
 
+RUN curl -fsSL https://tailscale.com/install.sh | sh
+
 ENV FLUX_FORWARD_NAMESPACE=flux
