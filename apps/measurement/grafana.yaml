@@ -65,7 +65,7 @@ spec:
       # TODO - Add Init container to adjust filesystem permissions
       containers:
         - name: grafana
-          image: grafana/grafana:11.5.2
+          image: grafana/grafana:11.6.0
           imagePullPolicy: IfNotPresent
           env:
             - name: GF_DATABASE_WAL
