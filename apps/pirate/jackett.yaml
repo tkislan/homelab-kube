@@ -59,7 +59,7 @@ spec:
     spec:
       containers:
         - name: jackett
-          image: linuxserver/jackett:0.22.1714
+          image: linuxserver/jackett:0.22.1756
           imagePullPolicy: Always
           volumeMounts:
             - name: config
