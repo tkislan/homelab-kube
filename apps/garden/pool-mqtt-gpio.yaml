@@ -18,6 +18,8 @@ spec:
     spec:
       securityContext:
         fsGroup: 997
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
       volumes:
         - name: config-template
           configMap:
@@ -43,8 +45,10 @@ spec:
               apk add gettext;
               envsubst < /templates/config.yaml > /config/config.yml;
           env:
+            # - name: MQTT_HOSTNAME
+            #   value: mosquitto.homepi
             - name: MQTT_HOSTNAME
-              value: mosquitto.homepi
+              value: homenuc
             - name: MQTT_PORT
               value: "1883"
             - name: MQTT_USERNAME
