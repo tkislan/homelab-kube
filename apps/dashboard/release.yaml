@@ -17,19 +17,4 @@ spec:
         namespace: kube-system
       interval: 5m
   releaseName: kubernetes-dashboard
-  values:
-    app:
-      tolerations:
-        - key: edge
-          operator: Equal
-          value: homenuc
-          effect: NoExecute
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: edge
-                    operator: In
-                    values:
-                      - homenuc
+  values: {}
