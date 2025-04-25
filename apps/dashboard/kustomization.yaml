@@ -6,3 +6,4 @@ resources:
   - release.yaml
   - serviceaccount.yaml
   - cluster-role-binding.yaml
+  - serviceaccount-token-secret.yaml
