@@ -17,4 +17,18 @@ spec:
         namespace: kube-system
       interval: 5m
   releaseName: kubernetes-dashboard
-  values: {}
+  values:
+    app:
+      ingress:
+        enabled: true
+        ingressClassName: traefik
+        hosts:
+          - kube-dashboard.kislan.sk
+        useDefaultAnnotations: false
+        annotations:
+          traefik.ingress.kubernetes.io/router.entrypoints: websecure
+          traefik.ingress.kubernetes.io/router.tls: "true"
+          traefik.ingress.kubernetes.io/frontend-entry-points: http
+        issuer:
+          name: letsencrypt
+          scope: cluster
