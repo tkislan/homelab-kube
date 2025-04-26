@@ -21,7 +21,7 @@ spec:
     app:
       ingress:
         enabled: true
-        ingressClassName: traefik
+        useDefaultIngressClass: true
         hosts:
           - kube-dashboard.kislan.sk
         useDefaultAnnotations: false
