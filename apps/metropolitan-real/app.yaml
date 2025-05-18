@@ -46,7 +46,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: empty-metropolitanreal
+  name: metropolitanreal
   namespace: metropolitan-real
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt"
@@ -61,7 +61,8 @@ spec:
   tls:
     - hosts:
         - metropolitanreal.sk
-      secretName: empty-metropolitanreal-sk
+        - www.metropolitanreal.sk
+      secretName: metropolitanreal-sk
   rules:
     - host: metropolitanreal.sk
       http:
@@ -73,48 +74,16 @@ spec:
                 name: metropolitanreal
                 port:
                   number: 9000
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: metropolitanreal
-#   namespace: metropolitan-real
-#   annotations:
-#     cert-manager.io/cluster-issuer: "letsencrypt"
-#     kubernetes.io/ingress.class: traefik
-#     traefik.ingress.kubernetes.io/frontend-entry-points: http
-#     traefik.ingress.kubernetes.io/buffering: |
-#       maxrequestbodybytes: 31457280
-#       memrequestbodybytes: 62914560
-#     traefik.ingress.kubernetes.io/router.entrypoints: websecure
-#     traefik.ingress.kubernetes.io/router.tls: "true"
-# spec:
-#   tls:
-#     - hosts:
-#         - metropolitanreal.sk
-#         - www.metropolitanreal.sk
-#       secretName: metropolitanreal-sk
-#   rules:
-#     - host: metropolitanreal.sk
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: metropolitanreal
-#                 port:
-#                   number: 9000
-#     - host: www.metropolitanreal.sk
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: metropolitanreal
-#                 port:
-#                   number: 9000
+    - host: www.metropolitanreal.sk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: metropolitanreal
+                port:
+                  number: 9000
 ---
 apiVersion: apps/v1
 kind: Deployment
