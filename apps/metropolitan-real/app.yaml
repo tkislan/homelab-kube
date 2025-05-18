@@ -42,42 +42,43 @@ spec:
                 name: metropolitanreal
                 port:
                   number: 9000
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: metropolitanreal
-#   namespace: metropolitan-real
-#   annotations:
-#     kubernetes.io/ingress.class: "nginx"
-#     cert-manager.io/cluster-issuer: "letsencrypt"
-#     nginx.ingress.kubernetes.io/proxy-body-size: 10m
-# spec:
-#   tls:
-#     - hosts:
-#         - metropolitanreal.sk
-#         - www.metropolitanreal.sk
-#       secretName: metropolitanreal-sk
-#   rules:
-#     - host: metropolitanreal.sk
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: metropolitanreal
-#                 port:
-#                   number: 9000
-#     - host: www.metropolitanreal.sk
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: metropolitanreal
-#                 port:
-#                   number: 9000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: metropolitanreal
+  namespace: metropolitan-real
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt"
+    nginx.ingress.kubernetes.io/proxy-body-size: 10m
+spec:
+  tls:
+    - hosts:
+        - metropolitanreal.sk
+        - www.metropolitanreal.sk
+      secretName: metropolitanreal-sk
+  rules:
+    - host: metropolitanreal.sk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: metropolitanreal
+                port:
+                  number: 9000
+    - host: www.metropolitanreal.sk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: metropolitanreal
+                port:
+                  number: 9000
 ---
 apiVersion: apps/v1
 kind: Deployment
