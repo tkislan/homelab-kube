@@ -31,6 +31,7 @@ spec:
       - http01:
           ingress:
             class: traefik
+            ingressClassName: traefik
       - dns01:
           digitalocean:
             tokenSecretRef:
