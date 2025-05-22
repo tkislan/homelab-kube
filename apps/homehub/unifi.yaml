@@ -70,7 +70,7 @@ spec:
             type: DirectoryOrCreate
       containers:
         - name: unifi
-          image: linuxserver/unifi-network-application:9.0.114
+          image: linuxserver/unifi-network-application:9.1.120
           env:
             - name: TZ
               value: Europe/Bratislava
