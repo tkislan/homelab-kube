@@ -39,7 +39,7 @@ spec:
             type: DirectoryOrCreate
       containers:
         - name: postgres
-          image: postgres:9.6.24-alpine
+          image: postgres:10.23-alpine
           ports:
             - containerPort: 5432
           env:
