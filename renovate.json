@@ -11,13 +11,13 @@
   "automerge": true,
   "automergeSchedule": "* 8-21 * * *",
   "flux": {
-    "fileMatch": [
-      "\\.ya?ml$"
+    "managerFilePatterns": [
+      "/\\.ya?ml$/"
     ]
   },
   "kubernetes": {
-    "fileMatch": [
-      "\\.ya?ml$"
+    "managerFilePatterns": [
+      "/\\.ya?ml$/"
     ]
   },
   "packageRules": [
