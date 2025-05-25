@@ -32,6 +32,22 @@
         "linuxserver/openssh-server"
       ],
       "versioning": "loose"
+    },
+    {
+      "matchDatasources": [
+        "kubernetes"
+      ],
+      "matchPackageNames": [
+        "postgres",
+        "postgresql"
+      ],
+      "matchPackagePatterns": [
+        "^postgres",
+        "^postgresql"
+      ],
+      "major": {
+        "enabled": false
+      }
     }
   ]
 }
