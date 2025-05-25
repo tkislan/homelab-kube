@@ -24,26 +24,15 @@
   },
   "packageRules": [
     {
-      "matchDatasources": [
-        "kubernetes"
-      ],
       "matchPackageNames": [
-        "plexinc/pms-docker",
-        "linuxserver/openssh-server"
+        "pms-docker",
+        "openssh-server"
       ],
       "versioning": "loose"
     },
     {
-      "matchDatasources": [
-        "kubernetes"
-      ],
       "matchPackageNames": [
-        "postgres",
-        "postgresql"
-      ],
-      "matchPackagePatterns": [
-        "^postgres",
-        "^postgresql"
+        "postgres"
       ],
       "major": {
         "enabled": false
