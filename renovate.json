@@ -48,6 +48,22 @@
       "major": {
         "enabled": false
       }
+    },
+    {
+      "groupName": "pirate non-major",
+      "groupSlug": "pirate-non-major",
+      "matchPackagePatterns": [
+        "sonarr",
+        "radarr",
+        "bazarr",
+        "overseerr",
+        "prowlarr",
+        "jackett"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
     }
   ]
 }
