@@ -41,18 +41,18 @@
     {
       "groupName": "pirate non-major",
       "groupSlug": "pirate-non-major",
-      "matchPackagePatterns": [
-        "sonarr",
-        "radarr",
-        "bazarr",
-        "overseerr",
-        "prowlarr",
-        "jackett",
-        "plextraktsync"
-      ],
       "matchUpdateTypes": [
         "minor",
         "patch"
+      ],
+      "matchPackageNames": [
+        "/sonarr/",
+        "/radarr/",
+        "/bazarr/",
+        "/overseerr/",
+        "/prowlarr/",
+        "/jackett/",
+        "/plextraktsync/"
       ]
     }
   ]

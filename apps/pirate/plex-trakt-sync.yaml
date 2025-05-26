@@ -19,7 +19,7 @@ spec:
                 type: DirectoryOrCreate
           containers:
             - name: plextraktsync
-              image: ghcr.io/taxel/plextraktsync:0.34.7
+              image: ghcr.io/taxel/plextraktsync:0.34.10
               imagePullPolicy: Always
               args:
                 - sync
