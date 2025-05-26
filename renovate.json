@@ -47,7 +47,8 @@
         "bazarr",
         "overseerr",
         "prowlarr",
-        "jackett"
+        "jackett",
+        "plextraktsync"
       ],
       "matchUpdateTypes": [
         "minor",
