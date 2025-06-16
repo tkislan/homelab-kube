@@ -1,24 +1,19 @@
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: plex-forward
-  namespace: pirate
-spec:
-  type: NodePort
-  ports:
-    - port: 32400
-      targetPort: 32400
-      protocol: UDP
-      nodePort: 32400
-      name: udp
-    - port: 32400
-      targetPort: 32400
-      protocol: TCP
-      nodePort: 32401
-      name: tcp
-  selector:
-    app: plex
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: plex-forward
+#   namespace: pirate
+# spec:
+#   type: NodePort
+#   ports:
+#     - port: 32400
+#       targetPort: 32400
+#       protocol: TCP
+#       nodePort: 32400
+#       name: tcp
+#   selector:
+#     app: plex
 ---
 apiVersion: v1
 kind: Service
