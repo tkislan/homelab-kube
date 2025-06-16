@@ -11,10 +11,12 @@ spec:
       targetPort: 32400
       protocol: UDP
       nodePort: 32400
+      name: udp
     - port: 32400
       targetPort: 32400
       protocol: TCP
       nodePort: 32401
+      name: tcp
   selector:
     app: plex
 ---
