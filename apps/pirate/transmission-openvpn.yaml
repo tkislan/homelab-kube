@@ -80,7 +80,7 @@ spec:
     spec:
       containers:
         - name: transmission-openvpn
-          image: haugene/transmission-openvpn:5.3.1
+          image: haugene/transmission-openvpn:5.3.2
           imagePullPolicy: Always
           securityContext:
             privileged: true
