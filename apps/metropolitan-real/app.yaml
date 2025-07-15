@@ -107,7 +107,7 @@ spec:
         - name: gitlab-docker-registry-credentials
       containers:
         - name: metropolitanreal-app
-          image: registry.gitlab.com/metropolitan-real/metropolitan-real:app-1927389602-master-fd69c990734ba21fd3e0b85894fb70f403dc0601
+          image: registry.gitlab.com/metropolitan-real/metropolitan-real:app-1927537026-master-53b99f9512862af06a4e1058fbd9c993081c26d2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9000
