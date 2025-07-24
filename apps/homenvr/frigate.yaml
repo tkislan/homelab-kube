@@ -74,6 +74,11 @@ spec:
     spec:
       dnsPolicy: ClusterFirstWithHostNet
       hostNetwork: true
+      securityContext:
+        supplementalGroups:
+          - 993 # render
+          - 44  # video
+          - 46  # plugdev
       volumes:
         - name: dshm
           emptyDir:
@@ -102,10 +107,6 @@ spec:
         - name: frigate
           image: ghcr.io/blakeblackshear/frigate:0.15.2
           securityContext:
-            supplementalGroups:
-              - 993 # render
-              - 44  # video
-              - 46  # plugdev
             privileged: true
             capabilities:
               add: ["CAP_PERFMON"]
