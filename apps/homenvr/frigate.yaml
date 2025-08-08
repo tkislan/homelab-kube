@@ -74,6 +74,11 @@ spec:
     spec:
       dnsPolicy: ClusterFirstWithHostNet
       hostNetwork: true
+      securityContext:
+        supplementalGroups:
+          - 993 # render
+          - 44 # video
+          - 46 # plugdev
       volumes:
         - name: dshm
           emptyDir:
@@ -118,7 +123,9 @@ spec:
             - name: rtsp
               containerPort: 8554
               protocol: TCP
-          env: []
+          env:
+            - name: LIBVA_DRIVER_NAME
+              value: i965
           volumeMounts:
             - name: localtime
               mountPath: /etc/localtime
