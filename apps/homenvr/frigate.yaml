@@ -105,7 +105,7 @@ spec:
             path: /etc/localtime
       containers:
         - name: frigate
-          image: ghcr.io/blakeblackshear/frigate:0.16.0-rc2
+          image: ghcr.io/blakeblackshear/frigate:0.16.0-rc3
           securityContext:
             privileged: true
             capabilities:
