@@ -55,5 +55,8 @@
         "/plextraktsync/"
       ]
     }
+  ],
+  "ignorePaths": [
+    "apps/kodi-connect/mongo.yaml"
   ]
 }
