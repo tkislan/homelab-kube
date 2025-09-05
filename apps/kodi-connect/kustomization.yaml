@@ -10,4 +10,4 @@ resources:
   - secrets.yaml
 
   - mongo.yaml
-# - app.yaml
+  - app.yaml
