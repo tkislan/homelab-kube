@@ -15,4 +15,5 @@ resources:
   - sensorpi
   - freshrss
   - measurement
+  - system
   - tunnel
