@@ -10,7 +10,6 @@
   ],
   "automerge": true,
   "automergeSchedule": "* 8-21 * * *",
-  "prCreation": "not-pending",
   "prNotPendingHours": 1,
   "flux": {
     "managerFilePatterns": [
