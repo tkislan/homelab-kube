@@ -21,6 +21,13 @@ spec:
     serviceAccount:
       name: node-exporter
 
+    tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      - key: edge
+        effect: NoExecute
+        operator: Exists
+
     # Resource limits
     resources:
       requests:
