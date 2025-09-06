@@ -58,6 +58,7 @@ spec:
       labels:
         app: prometheus
     spec:
+      serviceAccountName: measurement
       securityContext:
         runAsUser: 0
         runAsNonRoot: false

@@ -11,6 +11,7 @@ configMapGenerator:
 resources:
   - namespace.yaml
   - serviceaccount.yaml
+  - rbac.yaml
 
   - secrets.yaml
 
