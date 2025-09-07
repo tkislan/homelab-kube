@@ -27,31 +27,20 @@ scrape_configs:
         action: keep
         regex: prometheus-node-exporter
 
-      # Only keep endpoints that are on port 9100 (node-exporter default port)
+      # Only keep endpoints that are on the metrics port
       - source_labels: [__meta_kubernetes_endpoint_port_name]
         action: keep
-        regex: http-metrics
+        regex: metrics
 
-      # Replace the address with the node's external IP or internal IP
-      - source_labels:
-          [
-            __meta_kubernetes_endpoint_address_target_kind,
-            __meta_kubernetes_endpoint_address_target_name,
-          ]
-        action: replace
-        target_label: __address__
-        regex: Node;(.*)
-        replacement: ${1}:9100
-
-      # Add node name as a label
-      - source_labels: [__meta_kubernetes_endpoint_address_target_name]
+      # Add node name as a label from the pod's node name
+      - source_labels: [__meta_kubernetes_pod_node_name]
         action: replace
         target_label: node
         regex: (.*)
         replacement: ${1}
 
-      # Add instance label
-      - source_labels: [__meta_kubernetes_endpoint_address_target_name]
+      # Add instance label using the node name
+      - source_labels: [__meta_kubernetes_pod_node_name]
         action: replace
         target_label: instance
         regex: (.*)
