@@ -1,0 +1,111 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-infra
+  namespace: measurement
+spec:
+  ports:
+    - port: 9090
+      targetPort: 9090
+      protocol: TCP
+  selector:
+    app: prometheus-infra
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prometheus-infra
+  namespace: measurement
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/frontend-entry-points: http
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    ingress.kubernetes.io/auth-type: basic
+    ingress.kubernetes.io/auth-secret: prometheus-infra-basic-auth
+    cert-manager.io/cluster-issuer: "letsencrypt"
+spec:
+  tls:
+    - hosts:
+        - prometheus-infra.kislan.sk
+      secretName: prometheus-infra-kislan-sk
+  rules:
+    - host: prometheus-infra.kislan.sk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus-infra
+                port:
+                  number: 9090
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: prometheus-infra
+  namespace: measurement
+spec:
+  serviceName: prometheus-infra
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus-infra
+  template:
+    metadata:
+      labels:
+        app: prometheus-infra
+    spec:
+      serviceAccountName: measurement
+      securityContext:
+        runAsUser: 0
+        runAsNonRoot: false
+        runAsGroup: 0
+        fsGroup: 0
+      volumes:
+        - name: prometheus-config
+          configMap:
+            name: prometheus-infra-config
+        - name: data
+          hostPath:
+            path: /var/local/kube-volumes/prometheus-infra-data
+            type: DirectoryOrCreate
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v3.5.0
+          args:
+            - --config.file=/etc/prometheus/prometheus.yaml
+            - --storage.tsdb.path=/prometheus
+          ports:
+            - containerPort: 9090
+          env: []
+          volumeMounts:
+            - name: hass-prometheus-token
+              subPath: hass_prometheus_token
+              mountPath: /secrets/hass_prometheus_token
+              readOnly: true
+            - name: prometheus-config
+              subPath: prometheus.yaml
+              mountPath: /etc/prometheus/prometheus.yaml
+              readOnly: true
+            - name: data
+              mountPath: /prometheus
+          resources:
+            requests:
+              cpu: "0"
+              memory: "0"
+            limits:
+              cpu: 200m
+              memory: 250Mi
+      terminationGracePeriodSeconds: 10
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: storage
+                    operator: In
+                    values:
+                      - db
