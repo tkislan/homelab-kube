@@ -82,10 +82,6 @@ spec:
             - containerPort: 9090
           env: []
           volumeMounts:
-            - name: hass-prometheus-token
-              subPath: hass_prometheus_token
-              mountPath: /secrets/hass_prometheus_token
-              readOnly: true
             - name: prometheus-config
               subPath: prometheus.yaml
               mountPath: /etc/prometheus/prometheus.yaml
