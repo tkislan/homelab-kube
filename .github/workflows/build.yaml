@@ -18,7 +18,7 @@ jobs:
         with:
           version: "v1.31.4+k3s1"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install Kubectl
         run: ./scripts/install_kubectl.sh
