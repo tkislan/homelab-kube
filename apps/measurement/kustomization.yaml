@@ -7,6 +7,9 @@ configMapGenerator:
   - name: prometheus-config
     files:
       - prometheus-config/prometheus.yaml
+  - name: prometheus-infra-config
+    files:
+      - prometheus-infra-config/prometheus.yaml
 
 resources:
   - namespace.yaml
@@ -16,4 +19,5 @@ resources:
   - secrets.yaml
 
   - prometheus.yaml
+  - prometheus-infra.yaml
   - grafana.yaml
