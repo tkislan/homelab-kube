@@ -24,8 +24,8 @@
   "packageRules": [
     {
       "matchPackageNames": [
-        "pms-docker",
-        "openssh-server"
+        "plexinc/pms-docker",
+        "linuxserver/openssh-server"
       ],
       "versioning": "loose"
     },
