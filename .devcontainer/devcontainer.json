@@ -22,5 +22,10 @@
             }
         }
     },
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+            "dockerDashComposeVersion": "v2"
+        }
+    },
     "postCreateCommand": "git config --global --add safe.directory /workspace"
 }
