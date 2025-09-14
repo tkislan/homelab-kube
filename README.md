@@ -60,3 +60,8 @@ tailscaled --tun=userspace-networking --socks5-server=localhost:1055 --outbound-
 ```
 tailscale up --auth-key=<key>
 ```
+
+### Debug Renovate config matchers
+```
+docker run --rm -it -v $PWD:/usr/src/app -e LOG_LEVEL=debug ghcr.io/renovatebot/renovate --platform=local > renovate.log
+```
