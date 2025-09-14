@@ -1,4 +1,4 @@
-name: Kustomize Build
+name: Build
 
 on: [push]
 
@@ -40,3 +40,21 @@ jobs:
 
       - name: Kustomize Build Apps
         run: kubectl kustomize apps/ | kubectl apply -f -
+  
+  devcontainer_build:
+    name: Devcontainer Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          package-manager-cache: false
+
+      - name: Install Devcontainer CLI
+        run: npm install -g @devcontainers/cli
+
+      - name: Build Devcontainer
+        run: devcontainer up --workspace-folder .
