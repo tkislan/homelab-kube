@@ -21,3 +21,5 @@ spec:
     replicaCount: 2
     serviceDns:
       enabled: true
+    adlists:
+      - https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/adblock/pro.txt
