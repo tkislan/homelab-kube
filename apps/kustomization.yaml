@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - cluster-issuer.yaml
   - traefik-utils.yaml
+  - pihole
   - dashboard
   - botkube
   - metropolitan-real
