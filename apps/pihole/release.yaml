@@ -19,9 +19,10 @@ spec:
   releaseName: pihole
   values:
     replicaCount: 2
-    # serviceDns:
-    #   enabled: true
-    dnsHostPort:
+    serviceDns:
       enabled: true
+      type: LoadBalancer
+    # dnsHostPort:
+    #   enabled: true
     adlists:
       - https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/adblock/pro.txt
