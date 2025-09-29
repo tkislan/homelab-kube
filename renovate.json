@@ -38,6 +38,15 @@
       }
     },
     {
+      "matchPackageNames": [
+        "linuxserver/jackett"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "automerge": true
+    },
+    {
       "groupName": "pirate non-major",
       "groupSlug": "pirate-non-major",
       "matchUpdateTypes": [
