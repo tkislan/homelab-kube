@@ -75,7 +75,7 @@ spec:
             path: /etc/localtime
       containers:
         - name: hass
-          image: ghcr.io/home-assistant/home-assistant:2025.10.2
+          image: ghcr.io/home-assistant/home-assistant:2025.10.3
           securityContext:
             privileged: true
           ports:
