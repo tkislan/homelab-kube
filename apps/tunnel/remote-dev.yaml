@@ -127,8 +127,6 @@ spec:
           ports:
             - containerPort: 2222
             - containerPort: 3000
-            - containerPort: 7000
-            - containerPort: 7001
           env:
             - name: USER_NAME
               value: tunnel
