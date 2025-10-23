@@ -74,7 +74,7 @@ spec:
             type: DirectoryOrCreate
       containers:
         - name: prometheus
-          image: prom/prometheus:v3.6.0
+          image: prom/prometheus:v3.7.2
           args:
             - --config.file=/etc/prometheus/prometheus.yaml
             - --storage.tsdb.path=/prometheus
