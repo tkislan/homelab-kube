@@ -11,21 +11,18 @@ spec:
       protocol: TCP
       name: http
 ---
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
+apiVersion: v1
+kind: Endpoints
 metadata:
   name: wedding-external
   namespace: wedding
-  labels:
-    kubernetes.io/service-name: wedding-external
-addressType: IPv4
-ports:
-  - name: http
-    protocol: TCP
-    port: 80
-endpoints:
+subsets:
   - addresses:
-      - "165.227.250.207"
+      - ip: 165.227.250.207
+    ports:
+      - port: 80
+        protocol: TCP
+        name: http
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
