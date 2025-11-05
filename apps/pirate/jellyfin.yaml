@@ -1,0 +1,118 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyfin
+  namespace: pirate
+spec:
+  ports:
+    - port: 8096
+      targetPort: 8096
+      protocol: TCP
+  selector:
+    app: jellyfin
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jellyfin
+  namespace: pirate
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/frontend-entry-points: http
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt"
+
+spec:
+  tls:
+    - hosts:
+        - jellyfin.kislan.sk
+      secretName: jellyfin-kislan-sk
+  rules:
+    - host: jellyfin.kislan.sk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: jellyfin
+                port:
+                  number: 8096
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jellyfin
+  labels:
+    name: jellyfin
+spec:
+  serviceName: jellyfin
+  selector:
+    matchLabels:
+      app: jellyfin
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      volumes:
+        - name: config
+          hostPath:
+            path: /var/local/kube-volumes/jellyfin-config
+            type: DirectoryOrCreate
+        - name: cache
+          hostPath:
+            path: /root/storage/pirate/jellyfin/cache
+            type: DirectoryOrCreate
+        - name: movies
+          hostPath:
+            path: /root/storage/pirate/library/movies
+            type: DirectoryOrCreate
+        - name: tvshows
+          hostPath:
+            path: /root/storage2/pirate/library/tvshows
+            type: DirectoryOrCreate
+      containers:
+        - name: jellyfin
+          image: jellyfin/jellyfin:latest
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            tcpSocket:
+              port: 8096
+            initialDelaySeconds: 60
+            periodSeconds: 5
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /cache
+              name: cache
+            - mountPath: /data/movies
+              name: movies
+            - mountPath: /data/tvshows
+              name: tvshows
+          env:
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
+            - name: TZ
+              value: "Europe/Bratislava"
+      tolerations:
+        - key: edge
+          operator: Equal
+          value: "homenuc"
+          effect: NoExecute
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: edge
+                    operator: In
+                    values:
+                      - homenuc

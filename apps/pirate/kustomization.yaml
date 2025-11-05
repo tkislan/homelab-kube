@@ -23,3 +23,4 @@ resources:
 
   - plex.yaml
   - plex-trakt-sync.yaml
+  - jellyfin.yaml
