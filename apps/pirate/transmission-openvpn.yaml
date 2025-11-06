@@ -118,6 +118,10 @@ spec:
               value: "no_all"
             - name: LOCAL_NETWORK
               value: "10.42.0.0/16"
+            - name: LOG_TO_STDOUT
+              value: "true"
+            - name: TRANSMISSION_LOG_LEVEL
+              value: "info"
             - name: TRANSMISSION_HOME
               value: /config
             - name: TRANSMISSION_DOWNLOAD_DIR
