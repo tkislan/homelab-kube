@@ -126,6 +126,11 @@ spec:
           env:
             - name: LIBVA_DRIVER_NAME
               value: i965
+            - name: PLUS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: frigate
+                  key: plus_api_key
           volumeMounts:
             - name: localtime
               mountPath: /etc/localtime
