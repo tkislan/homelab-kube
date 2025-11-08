@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frigate
-  namespace: homepi
+  namespace: homenvr
 spec:
   ports:
     - name: http-auth
@@ -29,7 +29,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: frigate
-  namespace: homepi
+  namespace: homenvr
   annotations:
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
@@ -58,7 +58,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: frigate
-  namespace: homepi
+  namespace: homenvr
   annotations:
     fluxcd.io/automated: "false"
 spec:

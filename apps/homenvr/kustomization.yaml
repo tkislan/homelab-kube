@@ -7,4 +7,6 @@ resources:
   - namespace.yaml
   - serviceaccount.yaml
 
+  - secrets.yaml
+
   - frigate.yaml
