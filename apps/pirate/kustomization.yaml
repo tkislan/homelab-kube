@@ -22,5 +22,4 @@ resources:
   - overseerr.yaml
 
   - plex.yaml
-  - plex-trakt-sync.yaml
   - jellyfin.yaml
