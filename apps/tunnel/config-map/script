@@ -1,6 +1,0 @@
-#!/usr/bin/with-contenv bash
-
-sed -i '/^\#\?AllowTcpForwarding/c\AllowTcpForwarding yes' /etc/ssh/sshd_config
-sed -i '/^\#\?GatewayPorts no/c\GatewayPorts yes' /etc/ssh/sshd_config
-sed -i '/^\#\?ClientAliveInterval/c\ClientAliveInterval 60' /etc/ssh/sshd_config
-sed -i '/^\#\?ClientAliveCountMax/c\ClientAliveInterval 5' /etc/ssh/sshd_config

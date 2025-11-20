@@ -6,8 +6,8 @@ namespace: tunnel
 configMapGenerator:
   - name: ssh-tunnel-config
     files:
-      - config-map/script
       - config-map/extra-ssh-key-script
+      - config-map/sshd_config
 
 resources:
   - namespace.yaml
