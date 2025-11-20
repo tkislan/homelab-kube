@@ -18,7 +18,7 @@ jobs:
         with:
           version: "v1.31.4+k3s1"
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Install Kubectl
         run: ./scripts/install_kubectl.sh
@@ -45,7 +45,7 @@ jobs:
     name: Devcontainer Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Install Node
         uses: actions/setup-node@v6
