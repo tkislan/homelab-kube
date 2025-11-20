@@ -1,0 +1,12 @@
+---
+# K3s HelmChartConfig to ensure Traefik runs on all nodes
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    # Ensure Traefik runs on all nodes
+    deployment:
+      kind: DaemonSet  # Change from Deployment to DaemonSet
