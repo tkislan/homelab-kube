@@ -22,5 +22,6 @@ resources:
   - paradox.yaml
   - zwavejs.yaml
   - zigbeemqtt.yaml
+  - matter-server.yaml
 
   - hass.yaml
