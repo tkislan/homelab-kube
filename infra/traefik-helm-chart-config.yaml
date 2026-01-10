@@ -10,29 +10,3 @@ spec:
     # Ensure Traefik runs on all nodes
     deployment:
       kind: DaemonSet  # Change from Deployment to DaemonSet
-
-    # Fix random websocket connection failures on new connections
-    ports:
-      web:
-        transport:
-          # Disable keepalive limits that can break websocket handshakes
-          keepAliveMaxRequests: 0      # No limit on requests per connection
-          keepAliveMaxTime: 0          # No time limit on connections
-          respondingTimeouts:
-            readTimeout: 0             # No timeout for reading (websockets are long-lived)
-            writeTimeout: 0            # No timeout for writing
-            idleTimeout: 0             # No idle timeout
-          lifeCycle:
-            graceTimeOut: 30s          # Grace period during shutdown
-            requestAcceptGraceTimeout: 5s  # Accept new requests during shutdown
-      websecure:
-        transport:
-          keepAliveMaxRequests: 0      # No limit on requests per connection
-          keepAliveMaxTime: 0          # No time limit on connections
-          respondingTimeouts:
-            readTimeout: 0             # No timeout for reading (websockets are long-lived)
-            writeTimeout: 0            # No timeout for writing
-            idleTimeout: 0             # No idle timeout
-          lifeCycle:
-            graceTimeOut: 30s          # Grace period during shutdown
-            requestAcceptGraceTimeout: 5s  # Accept new requests during shutdown
