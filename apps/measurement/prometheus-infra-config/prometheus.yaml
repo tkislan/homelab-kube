@@ -36,3 +36,24 @@ scrape_configs:
         target_label: instance
         regex: (.*)
         replacement: ${1}
+
+  - job_name: "kube-state-metrics"
+    scrape_interval: 15s
+    scrape_timeout: 10s
+
+    kubernetes_sd_configs:
+      - role: endpoints
+        namespaces:
+          names:
+            - kube-system
+
+    relabel_configs:
+      # Only keep targets that are from the kube-state-metrics service
+      - source_labels: [__meta_kubernetes_service_name]
+        action: keep
+        regex: kube-state-metrics
+
+      # Only keep endpoints that are on the http port
+      - source_labels: [__meta_kubernetes_endpoint_port_name]
+        action: keep
+        regex: http

@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - repository.yaml
   - node-exporter/release.yaml
+  - kube-state-metrics/release.yaml
