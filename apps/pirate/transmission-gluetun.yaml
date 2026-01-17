@@ -66,6 +66,7 @@ spec:
           image: qmcgaw/gluetun:v3.40.0
           imagePullPolicy: IfNotPresent
           securityContext:
+            privileged: true
             capabilities:
               add:
                 - NET_ADMIN
@@ -112,7 +113,7 @@ spec:
               value: Netherlands
             # Firewall: Allow input to transmission ports (required for K8s sidecars)
             - name: FIREWALL_INPUT_PORTS
-              value: "9091,51820"
+              value: "9091,51820,9999"
             # Allow access to local Kubernetes network for ingress/services
             - name: FIREWALL_OUTBOUND_SUBNETS
               value: "10.42.0.0/16,10.43.0.0/16"
