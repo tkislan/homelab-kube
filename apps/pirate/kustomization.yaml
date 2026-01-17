@@ -13,7 +13,7 @@ resources:
   - serviceaccount.yaml
   - secrets.yaml
 
-  # - transmission-gluetun.yaml
+  - transmission-gluetun.yaml
   - transmission-openvpn.yaml
 
   - jackett.yaml

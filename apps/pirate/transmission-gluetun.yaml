@@ -76,16 +76,13 @@ spec:
             - name: transmission
               containerPort: 9091
               protocol: TCP
-            # Transmission peer port
-            - name: peer-tcp
-              containerPort: 51820
-              protocol: TCP
-            - name: peer-udp
-              containerPort: 51820
-              protocol: UDP
             # Gluetun control server
             - name: http-control
               containerPort: 8000
+              protocol: TCP
+            # Gluetun health server
+            - name: health
+              containerPort: 9999
               protocol: TCP
           volumeMounts:
             - name: tun-device
@@ -110,10 +107,10 @@ spec:
                   key: address
             # Server location
             - name: SERVER_COUNTRIES
-              value: Netherlands
+              value: Slovakia
             # Firewall: Allow input to transmission ports (required for K8s sidecars)
             - name: FIREWALL_INPUT_PORTS
-              value: "9091,51820,9999"
+              value: "9091,9999"
             # Allow access to local Kubernetes network for ingress/services
             - name: FIREWALL_OUTBOUND_SUBNETS
               value: "10.42.0.0/16,10.43.0.0/16"
@@ -123,11 +120,19 @@ spec:
             # Disable DNS-over-TLS to avoid block list timeout warnings
             - name: DOT
               value: "off"
+          # Startup probe - allows up to 5 minutes for VPN to connect
+          startupProbe:
+            httpGet:
+              path: /
+              port: 9999
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 30
           livenessProbe:
             httpGet:
               path: /
               port: 9999
-            initialDelaySeconds: 30
             periodSeconds: 30
             timeoutSeconds: 10
             failureThreshold: 3
@@ -135,7 +140,6 @@ spec:
             httpGet:
               path: /
               port: 9999
-            initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 3
@@ -168,9 +172,6 @@ spec:
               value: "0"
             - name: TZ
               value: Europe/Bratislava
-            # Peer port - must match FIREWALL_INPUT_PORTS and service nodePort
-            - name: PEERPORT
-              value: "51820"
             # RPC authentication
             - name: USER
               valueFrom:
