@@ -69,6 +69,7 @@ spec:
             capabilities:
               add:
                 - NET_ADMIN
+                - NET_RAW
           ports:
             # Transmission web UI - exposed through gluetun network stack
             - name: transmission
@@ -180,6 +181,9 @@ spec:
               value: "127.0.0.1,10.42.*.*,10.43.*.*"
             - name: HOST_WHITELIST
               value: "torrent.kislan.sk"
+            # Disable watch directory feature to prevent inotify errors
+            - name: TRANSMISSION_WATCH_DIR_ENABLED
+              value: "false"
           # Wait for VPN to be ready before starting
           startupProbe:
             tcpSocket:
