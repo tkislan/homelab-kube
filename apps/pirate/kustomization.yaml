@@ -3,17 +3,14 @@ kind: Kustomization
 
 namespace: pirate
 
-configMapGenerator:
-  - name: transmission-openvpn-scripts
-    files:
-      - config-map/transmission-openvpn/openvpn-post-config.sh
-
 resources:
   - namespace.yaml
   - serviceaccount.yaml
   - secrets.yaml
 
+  - transmission-gluetun.yaml
   - transmission-openvpn.yaml
+
   - jackett.yaml
   - sonarr.yaml
   - radarr.yaml

@@ -1,0 +1,236 @@
+---
+# Service for transmission web UI (exposed through gluetun network stack)
+apiVersion: v1
+kind: Service
+metadata:
+  name: transmission
+  namespace: pirate
+spec:
+  ports:
+    - name: web
+      port: 9091
+      targetPort: 9091
+      protocol: TCP
+  selector:
+    app: transmission
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: transmission
+  namespace: pirate
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/frontend-entry-points: http
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt"
+spec:
+  tls:
+    - hosts:
+        - torrent.kislan.sk
+      secretName: torrent-kislan-sk
+  rules:
+    - host: torrent.kislan.sk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: transmission
+                port:
+                  number: 9091
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: transmission
+  namespace: pirate
+spec:
+  serviceName: transmission
+  selector:
+    matchLabels:
+      app: transmission
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: transmission
+    spec:
+      # Gluetun container must start first and be ready before transmission
+      initContainers: []
+      containers:
+        # Gluetun VPN sidecar - manages the network stack
+        - name: gluetun
+          image: qmcgaw/gluetun:v3.40.0
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+          ports:
+            # Transmission web UI - exposed through gluetun network stack
+            - name: transmission
+              containerPort: 9091
+              protocol: TCP
+            # Transmission peer port
+            - name: peer-tcp
+              containerPort: 51820
+              protocol: TCP
+            - name: peer-udp
+              containerPort: 51820
+              protocol: UDP
+            # Gluetun control server
+            - name: http-control
+              containerPort: 8000
+              protocol: TCP
+          volumeMounts:
+            - name: tun-device
+              mountPath: /dev/net/tun
+          env:
+            - name: TZ
+              value: Europe/Bratislava
+            # VPN Provider configuration
+            - name: VPN_SERVICE_PROVIDER
+              value: mullvad
+            - name: VPN_TYPE
+              value: wireguard
+            - name: WIREGUARD_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mullvadvpn-wg
+                  key: private_key
+            - name: WIREGUARD_ADDRESSES
+              valueFrom:
+                secretKeyRef:
+                  name: mullvadvpn-wg
+                  key: address
+            # Server location
+            - name: SERVER_COUNTRIES
+              value: Netherlands
+            # Firewall: Allow input to transmission ports (required for K8s sidecars)
+            - name: FIREWALL_INPUT_PORTS
+              value: "9091,51820"
+            # Allow access to local Kubernetes network for ingress/services
+            - name: FIREWALL_OUTBOUND_SUBNETS
+              value: "10.42.0.0/16,10.43.0.0/16"
+            # Health server for Kubernetes probes
+            - name: HEALTH_SERVER_ADDRESS
+              value: "0.0.0.0:9999"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9999
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9999
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+
+        # Transmission container - uses gluetun's network stack
+        - name: transmission
+          image: lscr.io/linuxserver/transmission:4.0.6
+          imagePullPolicy: IfNotPresent
+          # No special network capabilities needed - uses pod's shared network namespace
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads
+            - name: downloads2
+              mountPath: /downloads2
+          env:
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
+            - name: TZ
+              value: Europe/Bratislava
+            # Peer port - must match FIREWALL_INPUT_PORTS and service nodePort
+            - name: PEERPORT
+              value: "51820"
+            # RPC authentication
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: transmission
+                  key: username
+            - name: PASS
+              valueFrom:
+                secretKeyRef:
+                  name: transmission
+                  key: password
+            # Allow access from Kubernetes network for ingress
+            - name: WHITELIST
+              value: "127.0.0.1,10.42.*.*,10.43.*.*"
+            - name: HOST_WHITELIST
+              value: "torrent.kislan.sk"
+          # Wait for VPN to be ready before starting
+          startupProbe:
+            tcpSocket:
+              port: 9091
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 30
+          livenessProbe:
+            tcpSocket:
+              port: 9091
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+
+      volumes:
+        - name: tun-device
+          hostPath:
+            path: /dev/net/tun
+            type: CharDevice
+        - name: config
+          hostPath:
+            path: /var/local/kube-volumes/transmission-config
+            type: DirectoryOrCreate
+        - name: downloads
+          hostPath:
+            path: /root/storage/pirate/downloads
+            type: DirectoryOrCreate
+        - name: downloads2
+          hostPath:
+            path: /root/storage2/pirate/downloads
+            type: DirectoryOrCreate
+
+      tolerations:
+        - key: edge
+          operator: Equal
+          value: homenuc
+          effect: NoExecute
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: edge
+                    operator: In
+                    values:
+                      - homenuc
