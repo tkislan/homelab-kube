@@ -120,12 +120,8 @@ spec:
             # Health server for Kubernetes probes
             - name: HEALTH_SERVER_ADDRESS
               value: "0.0.0.0:9999"
-            # Disable DNS block lists to avoid timeout warnings
-            - name: DOT_BLOCK_MALICIOUS
-              value: "off"
-            - name: DOT_BLOCK_SURVEILLANCE
-              value: "off"
-            - name: DOT_BLOCK_ADS
+            # Disable DNS-over-TLS to avoid block list timeout warnings
+            - name: DOT
               value: "off"
           livenessProbe:
             httpGet:
