@@ -70,6 +70,8 @@ spec:
           env:
             - name: GF_DATABASE_WAL
               value: "true"
+            - name: GF_SERVER_ROOT_URL
+              value: "https://grafana.kislan.sk"
           ports:
             - containerPort: 3000
               name: http-grafana
