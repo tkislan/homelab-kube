@@ -120,6 +120,13 @@ spec:
             # Health server for Kubernetes probes
             - name: HEALTH_SERVER_ADDRESS
               value: "0.0.0.0:9999"
+            # Disable DNS block lists to avoid timeout warnings
+            - name: DOT_BLOCK_MALICIOUS
+              value: "off"
+            - name: DOT_BLOCK_SURVEILLANCE
+              value: "off"
+            - name: DOT_BLOCK_ADS
+              value: "off"
           livenessProbe:
             httpGet:
               path: /
@@ -156,6 +163,8 @@ spec:
               mountPath: /downloads
             - name: downloads2
               mountPath: /downloads2
+            - name: watch
+              mountPath: /watch
           env:
             - name: PUID
               value: "0"
@@ -224,6 +233,8 @@ spec:
           hostPath:
             path: /root/storage2/pirate/downloads
             type: DirectoryOrCreate
+        - name: watch
+          emptyDir: {}
 
       tolerations:
         - key: edge
