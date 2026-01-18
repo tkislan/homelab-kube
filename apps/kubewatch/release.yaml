@@ -18,11 +18,18 @@ spec:
       interval: 5m
   releaseName: kubewatch
   values:
-    serviceAccount:
-      create: false
-      name: kubewatch
     rbac:
       create: true
+      customRoles:
+        - apiGroups: ["kustomize.toolkit.fluxcd.io"]
+          resources: ["kustomizations"]
+          verbs: ["get", "list", "watch"]
+        - apiGroups: ["helm.toolkit.fluxcd.io"]
+          resources: ["helmreleases"]
+          verbs: ["get", "list", "watch"]
+        - apiGroups: ["source.toolkit.fluxcd.io"]
+          resources: ["gitrepositories", "helmrepositories", "helmcharts"]
+          verbs: ["get", "list", "watch"]
     resourcesToWatch:
       deployment: false
       replicationcontroller: false
