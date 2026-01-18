@@ -14,7 +14,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: robusta
-        namespace: kubewatch
+        namespace: kube-system
       interval: 5m
   releaseName: kubewatch
   values:
