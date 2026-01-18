@@ -21,6 +21,17 @@ spec:
     rbac:
       create: true
       customRoles:
+        # Standard K8s resources not covered by default RBAC
+        - apiGroups: [""]
+          resources: ["serviceaccounts"]
+          verbs: ["get", "list", "watch"]
+        - apiGroups: ["rbac.authorization.k8s.io"]
+          resources: ["clusterroles", "clusterrolebindings"]
+          verbs: ["get", "list", "watch"]
+        - apiGroups: ["events.k8s.io"]
+          resources: ["events"]
+          verbs: ["get", "list", "watch"]
+        # Flux custom resources
         - apiGroups: ["kustomize.toolkit.fluxcd.io"]
           resources: ["kustomizations"]
           verbs: ["get", "list", "watch"]
