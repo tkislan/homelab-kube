@@ -76,14 +76,15 @@ spec:
       - group: source.toolkit.fluxcd.io
         version: v1
         resource: helmcharts
-    slackwebhookurl:
+    slack:
+      enabled: false
+    slackwebhook:
       enabled: true
       channel: "#kubewatch-homelab"
       username: "kubewatch"
       emoji: ":robot_face:"
-    extraEnvVars:
-      - name: KW_SLACK_WEBHOOK_URL
-        valueFrom:
-          secretKeyRef:
-            name: kubewatch
-            key: webhook_url
+  valuesFrom:
+    - kind: Secret
+      name: kubewatch
+      valuesKey: webhook_url
+      targetPath: slackwebhook.slackwebhookurl
