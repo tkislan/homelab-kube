@@ -3,8 +3,7 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: robusta
-  namespace: kube-system
+  namespace: kubewatch
 spec:
   interval: 5m0s
   url: https://robusta-charts.storage.googleapis.com
-

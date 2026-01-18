@@ -14,7 +14,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: robusta
-        namespace: kube-system
+        namespace: kubewatch
       interval: 5m
   releaseName: kubewatch
   values:
@@ -39,6 +39,22 @@ spec:
       ingress: false
       coreevent: false
       event: true
+    customresources:
+      - group: kustomize.toolkit.fluxcd.io
+        version: v1
+        resource: kustomizations
+      - group: helm.toolkit.fluxcd.io
+        version: v2
+        resource: helmreleases
+      - group: source.toolkit.fluxcd.io
+        version: v1
+        resource: gitrepositories
+      - group: source.toolkit.fluxcd.io
+        version: v1
+        resource: helmrepositories
+      - group: source.toolkit.fluxcd.io
+        version: v1
+        resource: helmcharts
     slackwebhookurl:
       enabled: true
       channel: "#kubewatch-homelab"
