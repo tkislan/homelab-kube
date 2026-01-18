@@ -1,0 +1,52 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kubewatch
+  namespace: kubewatch
+spec:
+  interval: 10m
+  timeout: 5m
+  chart:
+    spec:
+      chart: kubewatch
+      version: "*"
+      sourceRef:
+        kind: HelmRepository
+        name: robusta
+        namespace: kube-system
+      interval: 5m
+  releaseName: kubewatch
+  values:
+    rbac:
+      create: true
+    resourcesToWatch:
+      deployment: false
+      replicationcontroller: false
+      replicaset: false
+      daemonset: false
+      services: true
+      pod: true
+      job: false
+      node: false
+      clusterrole: true
+      clusterrolebinding: true
+      serviceaccount: true
+      persistentvolume: false
+      namespace: false
+      secret: false
+      configmap: false
+      ingress: false
+      coreevent: false
+      event: true
+    slackwebhookurl:
+      enabled: true
+      channel: "#kubewatch-homelab"
+      username: "kubewatch"
+      emoji: ":robot_face:"
+    extraEnvVars:
+      - name: KW_SLACK_WEBHOOK_URL
+        valueFrom:
+          secretKeyRef:
+            name: kubewatch
+            key: webhook_url
