@@ -28,9 +28,6 @@ spec:
         - apiGroups: ["rbac.authorization.k8s.io"]
           resources: ["clusterroles", "clusterrolebindings"]
           verbs: ["get", "list", "watch"]
-        - apiGroups: ["events.k8s.io"]
-          resources: ["events"]
-          verbs: ["get", "list", "watch"]
         # Flux custom resources
         - apiGroups: ["kustomize.toolkit.fluxcd.io"]
           resources: ["kustomizations"]
@@ -59,7 +56,7 @@ spec:
       configmap: false
       ingress: false
       coreevent: false
-      event: true
+      event: false
     customresources:
       - group: kustomize.toolkit.fluxcd.io
         version: v1
