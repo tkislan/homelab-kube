@@ -123,22 +123,22 @@ spec:
           # Startup probe - allows up to 5 minutes for VPN to connect
           startupProbe:
             httpGet:
-              path: /
+              path: /health
               port: 9999
-            initialDelaySeconds: 10
+            initialDelaySeconds: 15
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 30
           livenessProbe:
             httpGet:
-              path: /
+              path: /health
               port: 9999
             periodSeconds: 30
             timeoutSeconds: 10
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /
+              path: /health
               port: 9999
             periodSeconds: 10
             timeoutSeconds: 5
