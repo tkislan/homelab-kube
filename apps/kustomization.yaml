@@ -6,7 +6,7 @@ resources:
   - traefik-utils.yaml
   - dashboard
   - botkube
-  - kubewatch
+  # - kubewatch
   - metropolitan-real
   - kodi-connect
   - homehub
