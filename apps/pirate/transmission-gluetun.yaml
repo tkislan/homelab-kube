@@ -120,6 +120,9 @@ spec:
             # Disable DNS-over-TLS to avoid block list timeout warnings
             - name: DOT
               value: "off"
+            # Explicit DNS server for initial resolution before VPN connects
+            - name: DNS_ADDRESS
+              value: "1.1.1.1"
           # Startup probe - allows up to 5 minutes for VPN to connect
           startupProbe:
             httpGet:
@@ -133,6 +136,7 @@ spec:
             httpGet:
               path: /health
               port: 9999
+            initialDelaySeconds: 15
             periodSeconds: 30
             timeoutSeconds: 10
             failureThreshold: 3
@@ -140,6 +144,7 @@ spec:
             httpGet:
               path: /health
               port: 9999
+            initialDelaySeconds: 15
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 3
