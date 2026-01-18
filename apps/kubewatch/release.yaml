@@ -18,6 +18,9 @@ spec:
       interval: 5m
   releaseName: kubewatch
   values:
+    serviceAccount:
+      create: false
+      name: kubewatch
     rbac:
       create: true
     resourcesToWatch:
